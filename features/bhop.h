@@ -1,4 +1,5 @@
 #pragma once
 #include "../src/config.h"
+#include <windows.h>
 
-void startBhop(const BhopConfig& cfg);
+void runBhop(const BhopConfig& cfg, bool& toggle, bool& lastPressed);

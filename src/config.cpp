@@ -21,8 +21,7 @@ bool loadConfig(const std::string& path, Config& cfg) {
 	std::ifstream file(path);
 	if (!file.is_open()) return false;
 
-	std::string line;
-	std::string section;
+	std::string line, section;
 
 	while (std::getline(file, line)) {
 		line = trim(line);
@@ -63,6 +62,8 @@ bool loadConfig(const std::string& path, Config& cfg) {
 			else if (key == "direction") cfg.spinbot.direction = val;
 			else if (key == "speed") cfg.spinbot.speed = std::stoi(val);
 			else if (key == "interval") cfg.spinbot.interval = std::stoi(val);
+			else if (key == "startdelay") cfg.spinbot.startDelay = std::stoul(val);
+			else if (key == "repeatdelay") cfg.spinbot.repeatDelay = std::stoul(val);
 		}
 		else if (section == "bhop") {
 			if (key == "enabled") cfg.bhop.enabled = val == "1";

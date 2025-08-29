@@ -1,36 +1,34 @@
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #include <iostream>
-#include <thread>
-#include <chrono>
 #include "config.h"
-#include "input.h"
 #include "../features/bhop.h"
-#include "../features/spinbot.h"
 #include "../features/inspect-spam.h"
 #include "../features/mouse-glitch.h"
+#include "../features/spinbot.h"
+
+void welcomeMessage() {
+	std::cout << "Valorant Trollbot starting...\nMake sure to edit config.ini\n--Mike\n\n";
+}
 
 int main() {
-	std::cout << "Valorant Trollbot starting..." << std::endl;
-
+	welcomeMessage();
 	Config cfg;
 	if (!loadConfig("config.ini", cfg)) {
-		std::cerr << "Failed to load config.ini! Make sure the file exists in /config." << std::endl;
+		std::cerr << "Failed to load config.ini\n";
 		return 1;
 	}
 
-	std::cout << "Config loaded. Launching features..." << std::endl;
+	bool bhopToggle = false, lastBhop = false;
+	bool inspectToggle = false, lastInspect = false;
+	bool glitchToggle = false, lastGlitch = false;
+	bool spinToggle = false, lastSpin = false;
 
-	// Start all features
-	if (cfg.bhop.enabled) startBhop(cfg.bhop);
-	if (cfg.spinbot.enabled) startSpinbot(cfg.spinbot);
-	if (cfg.inspect.enabled) startInspectSpam(cfg.inspect);
-	if (cfg.mouseGlitch.enabled) startMouseGlitch(cfg.mouseGlitch);
-
-	std::cout << "All features running. Press Ctrl+C to exit." << std::endl;
-
-	// Keep main thread alive indefinitely
-	while (true) {
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+	for (;;) {
+		runBhop(cfg.bhop, bhopToggle, lastBhop);
+		runInspect(cfg.inspect, inspectToggle, lastInspect);
+		runMouseGlitch(cfg.mouseGlitch, glitchToggle, lastGlitch);
+		runSpinbot(cfg.spinbot, spinToggle, lastSpin);
+		Sleep(1);
 	}
-
-	return 0;
 }

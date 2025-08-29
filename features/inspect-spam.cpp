@@ -1,32 +1,20 @@
 #include "inspect-spam.h"
 #include "../src/input.h"
 #include <thread>
-#include <atomic>
-#include <chrono>
 
-static std::atomic<bool> toggleInspect(false);
+void runInspect(const InspectConfig& cfg, bool& toggle, bool& lastPressed) {
+	if (!cfg.enabled) return;
 
-void startInspectSpam(const InspectConfig& cfg) {
-	std::thread([cfg]() {
-		if (!cfg.enabled) return;
+	bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
+	if (cfg.mode == "toggle" && pressed && !lastPressed) toggle = !toggle;
+	lastPressed = pressed;
 
-		bool lastPressed = false;
-
-		while (true) {
-			bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
-
-			if (cfg.mode == "toggle") {
-				if (pressed && !lastPressed) toggleInspect = !toggleInspect;
-				lastPressed = pressed;
-			}
-
-			if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggleInspect)) {
-				std::this_thread::sleep_for(std::chrono::milliseconds(cfg.startDelay));
-				tapKey(cfg.inspectKey);
-				std::this_thread::sleep_for(std::chrono::milliseconds(cfg.repeatDelay));
-			}
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		}
-		}).detach();
+	if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggle)) {
+		Sleep(cfg.startDelay);
+		if (cfg.inspectKey >= 0x01 && cfg.inspectKey <= 0x06)
+			tapMouse(cfg.inspectKey);
+		else
+			tapKey(cfg.inspectKey);
+		Sleep(cfg.repeatDelay);
+	}
 }

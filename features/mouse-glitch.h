@@ -1,4 +1,5 @@
 #pragma once
 #include "../src/config.h"
+#include <windows.h>
 
-void startMouseGlitch(const MouseGlitchConfig& cfg);
+void runMouseGlitch(const MouseGlitchConfig& cfg, bool& toggle, bool& lastPressed);
