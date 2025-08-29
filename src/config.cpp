@@ -6,7 +6,12 @@
 static unsigned int hexToUInt(const std::string& s) {
 	unsigned int x = 0;
 	std::stringstream ss;
-	ss << std::hex << s;
+	// Remove 0x prefix if present
+	std::string hexStr = s;
+	if (hexStr.length() >= 2 && hexStr.substr(0, 2) == "0x") {
+		hexStr = hexStr.substr(2);
+	}
+	ss << std::hex << hexStr;
 	ss >> x;
 	return x;
 }
@@ -15,6 +20,12 @@ static std::string trim(const std::string& str) {
 	size_t start = str.find_first_not_of(" \t\r\n");
 	size_t end = str.find_last_not_of(" \t\r\n");
 	return (start == std::string::npos) ? "" : str.substr(start, end - start + 1);
+}
+
+static std::string toLower(const std::string& str) {
+	std::string result = str;
+	std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+	return result;
 }
 
 bool loadConfig(const std::string& path, Config& cfg) {
@@ -28,16 +39,21 @@ bool loadConfig(const std::string& path, Config& cfg) {
 		if (line.empty() || line[0] == ';' || line[0] == '#') continue;
 
 		if (line.front() == '[' && line.back() == ']') {
-			section = line.substr(1, line.size() - 2);
-			std::transform(section.begin(), section.end(), section.begin(), ::tolower);
+			section = toLower(line.substr(1, line.size() - 2));
 			continue;
 		}
 
 		auto eq = line.find('=');
 		if (eq == std::string::npos) continue;
 
-		std::string key = trim(line.substr(0, eq));
+		std::string key = toLower(trim(line.substr(0, eq)));
 		std::string val = trim(line.substr(eq + 1));
+
+		// Remove comments from value
+		size_t commentPos = val.find(';');
+		if (commentPos != std::string::npos) {
+			val = trim(val.substr(0, commentPos));
+		}
 
 		if (section == "inspectspam") {
 			if (key == "enabled") cfg.inspect.enabled = val == "1";

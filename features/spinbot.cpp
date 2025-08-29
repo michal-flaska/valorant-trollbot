@@ -9,9 +9,7 @@ void runSpinbot(const SpinbotConfig& cfg, bool& toggle, bool& lastPressed) {
 	lastPressed = pressed;
 
 	if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggle)) {
-		Sleep(cfg.startDelay);
 		int dx = (cfg.direction == "left" ? -cfg.speed : cfg.speed);
 		moveMouse(dx, 0);
-		Sleep(cfg.interval);
 	}
 }

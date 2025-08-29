@@ -1,6 +1,5 @@
 #include "inspect-spam.h"
 #include "../src/input.h"
-#include <thread>
 
 void runInspect(const InspectConfig& cfg, bool& toggle, bool& lastPressed) {
 	if (!cfg.enabled) return;
@@ -10,11 +9,7 @@ void runInspect(const InspectConfig& cfg, bool& toggle, bool& lastPressed) {
 	lastPressed = pressed;
 
 	if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggle)) {
-		Sleep(cfg.startDelay);
-		if (cfg.inspectKey >= 0x01 && cfg.inspectKey <= 0x06)
-			tapMouse(cfg.inspectKey);
-		else
-			tapKey(cfg.inspectKey);
-		Sleep(cfg.repeatDelay);
+		// Inspect key is always a keyboard key (ALT = 0x12)
+		tapKey(cfg.inspectKey);
 	}
 }
