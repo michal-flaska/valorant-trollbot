@@ -58,6 +58,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="config\config.ini" />
+    <CopyFileToFolders Include="config\config.ini" />
   </ItemGroup>
 </Project>
