@@ -1,3 +1,47 @@
-# valorant-trollbot
+# Valorant Trollbot
 
-first of all, this repository is just for educational purposes only. When i was creating it, i was learning C++ and win32api and i did not mean to harm any game fields, ruin experience of other players or use it in ranked matches. I was using it in deathmatches and custom games to make some people laugh. That's all
+> [!IMPORTANT]
+> This project is intended purely for learning C++ and Windows API (`Win32`). It is not designed to cheat in competitive matches. It was tested only in custom games or deathmatches for fun and experimentation. Do not use it in ranked or public matches, as that would violate Riot Games Terms of Service.
+
+## Overview
+
+Valorant Trollbot is a small Windows application that demonstrates:
+
+- Keyboard and mouse input simulation via `SendInput`
+- Config-driven behavior for multiple “trolling” effects
+- Modular C++ project structure with features separated into individual files
+- Reading `.ini` configuration files
+
+Features included:
+
+1. **Bhop** - Automatically jumps while holding a trigger key
+2. **Inspect Spam** - Repeatedly inspects your weapon with a key press
+3. **Mouse Glitch** - Moves your mouse randomly for fun
+4. **Spinbot** - Spins the mouse left or right continuously
+
+All features support:
+
+- **Hold or toggle modes**
+- Configurable **trigger keys**
+- Configurable **delays** for start and repeat actions
+
+## Setup
+
+1. Clone the repository
+2. Open `valorant-trollbot.sln` in **Visual Studio 2022**.
+3. Build the solution (x64 / Debug or Release).
+4. Make sure `config.ini` is located relative to the executable
+5. Run `valorant-trollbot.exe`.
+
+## Configuration
+
+Edit `config/config.ini` to set up the features. Example:
+
+- Hex key codes can be found [here](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
+- All delays are in **milliseconds**.
+
+## Usage
+
+- Launch the executable after editing the config.
+- Press or hold the trigger keys to activate each feature.
+- Features respect `Mode=hold` or `Mode=toggle` as configured.
