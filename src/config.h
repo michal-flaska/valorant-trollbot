@@ -5,6 +5,8 @@ struct FeatureConfig {
 	bool enabled = false;
 	std::string mode;       // "hold" or "toggle"
 	unsigned int triggerKey = 0;
+	unsigned int startDelay = 0;   // ms before starting action
+	unsigned int repeatDelay = 25; // ms between actions
 };
 
 struct InspectConfig : FeatureConfig {
@@ -18,13 +20,11 @@ struct MouseGlitchConfig : FeatureConfig {
 struct SpinbotConfig : FeatureConfig {
 	std::string direction = "right"; // left/right
 	int speed = 20;
-	int interval = 10;              // milliseconds
+	int interval = 10;              // ms per mouse move
 };
 
 struct BhopConfig : FeatureConfig {
 	unsigned int jumpKey = 0;
-	int startDelay = 0;  // ms before starting to press jump
-	int repeatDelay = 25;
 };
 
 struct Config {

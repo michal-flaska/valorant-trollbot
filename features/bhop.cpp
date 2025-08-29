@@ -4,21 +4,23 @@
 #include <atomic>
 #include <chrono>
 
-static std::atomic<bool> toggleState(false);
+static std::atomic<bool> bhopToggle(false);
 
 void startBhop(const BhopConfig& cfg) {
 	std::thread([cfg]() {
 		if (!cfg.enabled) return;
 
+		bool lastPressed = false;
+
 		while (true) {
 			bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
+
 			if (cfg.mode == "toggle") {
-				static bool lastPressed = false;
-				if (pressed && !lastPressed) toggleState = !toggleState;
+				if (pressed && !lastPressed) bhopToggle = !bhopToggle;
 				lastPressed = pressed;
 			}
 
-			if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggleState)) {
+			if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && bhopToggle)) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(cfg.startDelay));
 				tapKey(cfg.jumpKey);
 				std::this_thread::sleep_for(std::chrono::milliseconds(cfg.repeatDelay));
