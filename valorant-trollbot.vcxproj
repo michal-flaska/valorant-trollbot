@@ -141,17 +141,17 @@
     <ClCompile Include="features\inspect-spam.cpp" />
     <ClCompile Include="features\mouse-glitch.cpp" />
     <ClCompile Include="features\spinbot.cpp" />
-    <ClCompile Include="src\config.cpp" />
-    <ClCompile Include="src\input.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="core\config.cpp" />
+    <ClCompile Include="core\input.cpp" />
+    <ClCompile Include="core\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="features\bhop.h" />
     <ClInclude Include="features\inspect-spam.h" />
     <ClInclude Include="features\mouse-glitch.h" />
     <ClInclude Include="features\spinbot.h" />
-    <ClInclude Include="src\config.h" />
-    <ClInclude Include="src\input.h" />
+    <ClInclude Include="core\config.h" />
+    <ClInclude Include="core\input.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="config.ini">

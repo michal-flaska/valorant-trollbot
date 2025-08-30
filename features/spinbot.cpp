@@ -1,5 +1,5 @@
 #include "spinbot.h"
-#include "../src/input.h"
+#include "../core/input.h"
 #include <iostream>
 
 void runSpinbot(const SpinbotConfig& cfg, bool& toggle, bool& lastPressed) {

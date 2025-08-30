@@ -1,5 +1,5 @@
 #include "mouse-glitch.h"
-#include "../src/input.h"
+#include "../core/input.h"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>

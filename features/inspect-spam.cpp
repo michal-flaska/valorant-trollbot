@@ -1,5 +1,5 @@
 #include "inspect-spam.h"
-#include "../src/input.h"
+#include "../core/input.h"
 
 void runInspect(const InspectConfig& cfg, bool& toggle, bool& lastPressed) {
 	if (!cfg.enabled) return;
