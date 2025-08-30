@@ -35,7 +35,7 @@ All features support:
 
 ## Configuration
 
-Edit `config/config.ini` to set up the features. Example:
+Edit `config.ini` to set up the features. Example:
 
 - Hex key codes can be found [here](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
 - All delays are in **milliseconds**.
