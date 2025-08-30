@@ -17,7 +17,7 @@ void runMouseGlitch(const MouseGlitchConfig& cfg, bool& toggle, bool& lastPresse
 	bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
 	if (cfg.mode == "toggle" && pressed && !lastPressed) {
 		toggle = !toggle;
-		std::cout << "Mouse Glitch " << (toggle ? "ON" : "OFF") << std::endl;
+		std::cout << "Mouse Glitch " << (toggle ? "ON" : "OFF") << '\n';
 	}
 	lastPressed = pressed;
 
