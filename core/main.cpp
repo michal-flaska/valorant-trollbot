@@ -10,7 +10,9 @@
 #include "../features/spinbot.h"
 
 void welcomeMessage() {
-	std::cout << "Valorant Trollbot starting...\nMake sure to edit config.ini\n--Mike\n\n";
+	std::cout << "Valorant Trollbot starting..."
+		  << '\n' << "Make sure to edit config.ini"
+		  << '\n' << "--Mike" << '\n' << '\n';
 }
 
 std::atomic<bool> running(true);
@@ -51,7 +53,7 @@ int main() {
 	welcomeMessage();
 	Config cfg;
 	if (!loadConfig("config.ini", cfg)) {
-		std::cerr << "Failed to load config.ini\n";
+		std::cerr << "Failed to load config.ini" << '\n';
 		system("pause");
 		return 1;
 	}
@@ -61,7 +63,7 @@ int main() {
 	if (cfg.inspect.enabled) std::cout << "- Inspect spam enabled (trigger: 0x" << std::hex << cfg.inspect.triggerKey << ", inspect: 0x" << cfg.inspect.inspectKey << std::dec << ")\n";
 	if (cfg.mouseGlitch.enabled) std::cout << "- Mouse glitch enabled (trigger: 0x" << std::hex << cfg.mouseGlitch.triggerKey << std::dec << ")\n";
 	if (cfg.spinbot.enabled) std::cout << "- Spinbot enabled (trigger: 0x" << std::hex << cfg.spinbot.triggerKey << std::dec << ")\n";
-	std::cout << "\nPress ESC to exit\n\n";
+	std::cout << '\n' << "Press ESC to exit" << '\n' << '\n';
 
 	// Start threads for each enabled feature
 	std::vector<std::thread> threads;
@@ -83,7 +85,7 @@ int main() {
 	while (running) {
 		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
 			running = false;
-			std::cout << "Shutting down...\n";
+			std::cout << "Shutting down..." << '\n';
 			break;
 		}
 		Sleep(50);

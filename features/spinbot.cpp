@@ -1,5 +1,5 @@
 #include "spinbot.h"
-#include "../src/input.h"
+#include "../core/input.h"
 #include <iostream>
 
 void runSpinbot(const SpinbotConfig& cfg, bool& toggle, bool& lastPressed) {
@@ -8,7 +8,7 @@ void runSpinbot(const SpinbotConfig& cfg, bool& toggle, bool& lastPressed) {
 	bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
 	if (cfg.mode == "toggle" && pressed && !lastPressed) {
 		toggle = !toggle;
-		std::cout << "Spinbot " << (toggle ? "ON" : "OFF") << std::endl;
+		std::cout << "Spinbot " << (toggle ? "ON" : "OFF") << '\n';
 	}
 	lastPressed = pressed;
 

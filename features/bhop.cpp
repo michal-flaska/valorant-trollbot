@@ -1,5 +1,5 @@
 #include "bhop.h"
-#include "../src/input.h"
+#include "../core/input.h"
 
 void runBhop(const BhopConfig& cfg, bool& toggle, bool& lastPressed) {
 	if (!cfg.enabled) return;
