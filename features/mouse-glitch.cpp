@@ -2,6 +2,7 @@
 #include "../src/input.h"
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 static bool seeded = false;
 
@@ -14,7 +15,10 @@ void runMouseGlitch(const MouseGlitchConfig& cfg, bool& toggle, bool& lastPresse
 	}
 
 	bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
-	if (cfg.mode == "toggle" && pressed && !lastPressed) toggle = !toggle;
+	if (cfg.mode == "toggle" && pressed && !lastPressed) {
+		toggle = !toggle;
+		std::cout << "Mouse Glitch " << (toggle ? "ON" : "OFF") << std::endl;
+	}
 	lastPressed = pressed;
 
 	if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggle)) {
