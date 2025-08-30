@@ -146,6 +146,7 @@
     <ClCompile Include="core\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="core\feature-base.h" />
     <ClInclude Include="features\bhop.h" />
     <ClInclude Include="features\inspect-spam.h" />
     <ClInclude Include="features\mouse-glitch.h" />
