@@ -1,20 +1,15 @@
 #include "mouse-glitch.h"
 #include "../core/input.h"
-#include "../core/feature-base.h"
-#include <cstdlib>
-#include <ctime>
+#include <random>
 
-static bool seeded = false;
+static std::random_device rd;
+static std::mt19937 gen(rd());
 
-void runMouseGlitch(const MouseGlitchConfig& cfg, bool& toggle, bool& lastPressed) {
-	if (!seeded) {
-		srand(static_cast<unsigned int>(time(nullptr)));
-		seeded = true;
-	}
-
-	runFeatureWithFeedback(cfg, toggle, lastPressed, [&cfg]() {
-		int dx = rand() % (cfg.maxDistance * 2 + 1) - cfg.maxDistance;
-		int dy = rand() % (cfg.maxDistance * 2 + 1) - cfg.maxDistance;
+void runMouseGlitch(const MouseGlitchConfig& cfg, FeatureRunner<MouseGlitchConfig>& runner) {
+	runner.run(cfg, [&cfg]() {
+		std::uniform_int_distribution<int> dist(-cfg.maxDistance, cfg.maxDistance);
+		int dx = dist(gen);
+		int dy = dist(gen);
 		moveMouse(dx, dy);
 		}, "Mouse Glitch");
 }
