@@ -63,4 +63,7 @@
   <ItemGroup>
     <CopyFileToFolders Include="config.ini" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="config-ascii.ini" />
+  </ItemGroup>
 </Project>
