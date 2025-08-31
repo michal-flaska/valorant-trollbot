@@ -1,5 +1,5 @@
 #pragma once
 #include "../core/config.h"
-#include <windows.h>
+#include "../core/feature-base.h"
 
-void runMouseGlitch(const MouseGlitchConfig& cfg, bool& toggle, bool& lastPressed);
+void runMouseGlitch(const MouseGlitchConfig& cfg, FeatureRunner<MouseGlitchConfig>& runner);

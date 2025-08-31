@@ -3,43 +3,55 @@
 #include <windows.h>
 #include <functional>
 #include <iostream>
+#include <chrono>
 
-// Generic feature runner that handles common trigger/toggle logic
 template<typename ConfigType>
-void runFeature(const ConfigType& cfg, bool& toggle, bool& lastPressed, std::function<void()> action) {
-	if (!cfg.enabled) return;
+class FeatureRunner {
+private:
+	bool toggle = false;
+	bool lastPressed = false;
+	std::chrono::steady_clock::time_point lastActionTime;
+	bool hasDelayPassed = false;
 
-	bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
+public:
+	void run(const ConfigType& cfg, std::function<void()> action, const char* featureName = nullptr) {
+		if (!cfg.enabled) return;
 
-	// Handle toggle mode state change
-	if (cfg.mode == "toggle" && pressed && !lastPressed) {
-		toggle = !toggle;
-	}
-	lastPressed = pressed;
+		bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
 
-	// Execute action based on mode
-	if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggle)) {
-		action();
-	}
-}
+		if (cfg.mode == "toggle" && pressed && !lastPressed) {
+			toggle = !toggle;
+			hasDelayPassed = false;
+			lastActionTime = std::chrono::steady_clock::now();
 
-// Specialized version for features that need toggle feedback
-template<typename ConfigType>
-void runFeatureWithFeedback(const ConfigType& cfg, bool& toggle, bool& lastPressed,
-	std::function<void()> action, const char* featureName) {
-	if (!cfg.enabled) return;
+			if (featureName) {
+				std::cout << featureName << " " << (toggle ? "ON" : "OFF") << '\n';
+			}
+		}
+		lastPressed = pressed;
 
-	bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
+		bool shouldExecute = (cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggle);
 
-	if (cfg.mode == "toggle" && pressed && !lastPressed) {
-		toggle = !toggle;
-		if (featureName) {
-			std::cout << featureName << " " << (toggle ? "ON" : "OFF") << '\n';
+		if (shouldExecute) {
+			auto now = std::chrono::steady_clock::now();
+			auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastActionTime).count();
+
+			if (!hasDelayPassed) {
+				if (elapsed >= cfg.startDelay) {
+					hasDelayPassed = true;
+					lastActionTime = now;
+					action();
+				}
+			}
+			else {
+				if (elapsed >= cfg.repeatDelay) {
+					lastActionTime = now;
+					action();
+				}
+			}
+		}
+		else {
+			hasDelayPassed = false;
 		}
 	}
-	lastPressed = pressed;
-
-	if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggle)) {
-		action();
-	}
-}
+};

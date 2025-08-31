@@ -1,5 +1,5 @@
 #pragma once
 #include "../core/config.h"
-#include <windows.h>
+#include "../core/feature-base.h"
 
-void runBhop(const BhopConfig& cfg, bool& toggle, bool& lastPressed);
+void runBhop(const BhopConfig& cfg, FeatureRunner<BhopConfig>& runner);

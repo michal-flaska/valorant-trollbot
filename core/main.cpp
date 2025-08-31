@@ -3,54 +3,50 @@
 #include <thread>
 #include <atomic>
 #include <vector>
+#include <chrono>
 #include "config.h"
 #include "../features/bhop.h"
 #include "../features/inspect-spam.h"
 #include "../features/mouse-glitch.h"
 #include "../features/spinbot.h"
 
-void welcomeMessage() {
+void printWelcome() {
 	std::cout << "Valorant Trollbot starting..."
-		  << '\n' << "Make sure to edit config.ini"
-		  << '\n' << "--Mike" << '\n' << '\n';
+		<< '\n' << "Make sure to edit config.ini"
+		<< '\n' << "--Mike" << '\n' << '\n';
 }
 
-std::atomic<bool> running(true);
-
-void bhopThread(const BhopConfig& cfg) {
-	bool toggle = false, lastPressed = false;
-	while (running) {
-		runBhop(cfg, toggle, lastPressed);
-		Sleep(cfg.repeatDelay > 0 ? cfg.repeatDelay : 25);
-	}
+void printLoadedFeatures(const Config& cfg) {
+	std::cout << "Features loaded:\n";
+	if (cfg.bhop.enabled)
+		std::cout << "- Bhop (" << cfg.bhop.mode << " mode, trigger: 0x" << std::hex << cfg.bhop.triggerKey
+		<< ", jump: 0x" << cfg.bhop.jumpKey << std::dec << ")\n";
+	if (cfg.inspect.enabled)
+		std::cout << "- Inspect spam (" << cfg.inspect.mode << " mode, trigger: 0x" << std::hex << cfg.inspect.triggerKey
+		<< ", inspect: 0x" << cfg.inspect.inspectKey << std::dec << ")\n";
+	if (cfg.mouseGlitch.enabled)
+		std::cout << "- Mouse glitch (" << cfg.mouseGlitch.mode << " mode, trigger: 0x" << std::hex << cfg.mouseGlitch.triggerKey
+		<< std::dec << ")\n";
+	if (cfg.spinbot.enabled)
+		std::cout << "- Spinbot (" << cfg.spinbot.mode << " mode, trigger: 0x" << std::hex << cfg.spinbot.triggerKey
+		<< std::dec << ")\n";
+	std::cout << '\n' << "Press ESC to exit" << '\n' << '\n';
 }
 
-void inspectThread(const InspectConfig& cfg) {
-	bool toggle = false, lastPressed = false;
-	while (running) {
-		runInspect(cfg, toggle, lastPressed);
-		Sleep(cfg.repeatDelay > 0 ? cfg.repeatDelay : 100);
-	}
-}
+std::atomic<bool> running{ true };
 
-void glitchThread(const MouseGlitchConfig& cfg) {
-	bool toggle = false, lastPressed = false;
-	while (running) {
-		runMouseGlitch(cfg, toggle, lastPressed);
-		Sleep(cfg.repeatDelay > 0 ? cfg.repeatDelay : 50);
-	}
-}
-
-void spinThread(const SpinbotConfig& cfg) {
-	bool toggle = false, lastPressed = false;
-	while (running) {
-		runSpinbot(cfg, toggle, lastPressed);
-		Sleep(cfg.interval > 0 ? cfg.interval : 15);
+template<typename ConfigType, typename FeatureFunc>
+void featureThread(const ConfigType& cfg, FeatureFunc featureFunc, unsigned int sleepMs) {
+	FeatureRunner<ConfigType> runner;
+	while (running.load(std::memory_order_relaxed)) {
+		featureFunc(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleepMs));
 	}
 }
 
 int main() {
-	welcomeMessage();
+	printWelcome();
+
 	Config cfg;
 	if (!loadConfig("config.ini", cfg)) {
 		std::cerr << "Failed to load config.ini" << '\n';
@@ -58,42 +54,37 @@ int main() {
 		return 1;
 	}
 
-	std::cout << "Features loaded:\n";
-	if (cfg.bhop.enabled) std::cout << "- Bhop enabled (trigger: 0x" << std::hex << cfg.bhop.triggerKey << ", jump: 0x" << cfg.bhop.jumpKey << std::dec << ")\n";
-	if (cfg.inspect.enabled) std::cout << "- Inspect spam enabled (trigger: 0x" << std::hex << cfg.inspect.triggerKey << ", inspect: 0x" << cfg.inspect.inspectKey << std::dec << ")\n";
-	if (cfg.mouseGlitch.enabled) std::cout << "- Mouse glitch enabled (trigger: 0x" << std::hex << cfg.mouseGlitch.triggerKey << std::dec << ")\n";
-	if (cfg.spinbot.enabled) std::cout << "- Spinbot enabled (trigger: 0x" << std::hex << cfg.spinbot.triggerKey << std::dec << ")\n";
-	std::cout << '\n' << "Press ESC to exit" << '\n' << '\n';
+	printLoadedFeatures(cfg);
 
-	// Start threads for each enabled feature
 	std::vector<std::thread> threads;
+	threads.reserve(4);
 
 	if (cfg.bhop.enabled) {
-		threads.push_back(std::thread(bhopThread, std::ref(cfg.bhop)));
+		threads.emplace_back(featureThread<BhopConfig>, std::cref(cfg.bhop), runBhop, 10u);
 	}
 	if (cfg.inspect.enabled) {
-		threads.push_back(std::thread(inspectThread, std::ref(cfg.inspect)));
+		threads.emplace_back(featureThread<InspectConfig>, std::cref(cfg.inspect), runInspect, 10u);
 	}
 	if (cfg.mouseGlitch.enabled) {
-		threads.push_back(std::thread(glitchThread, std::ref(cfg.mouseGlitch)));
+		threads.emplace_back(featureThread<MouseGlitchConfig>, std::cref(cfg.mouseGlitch), runMouseGlitch, 10u);
 	}
 	if (cfg.spinbot.enabled) {
-		threads.push_back(std::thread(spinThread, std::ref(cfg.spinbot)));
+		threads.emplace_back(featureThread<SpinbotConfig>, std::cref(cfg.spinbot), runSpinbot, 10u);
 	}
 
-	// Main loop - check for exit key
-	while (running) {
+	while (running.load(std::memory_order_relaxed)) {
 		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
-			running = false;
+			running.store(false, std::memory_order_relaxed);
 			std::cout << "Shutting down..." << '\n';
 			break;
 		}
-		Sleep(50);
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
 
-	// Wait for all threads to finish
-	for (size_t i = 0; i < threads.size(); ++i) {
-		if (threads[i].joinable()) threads[i].join();
+	for (auto& thread : threads) {
+		if (thread.joinable()) {
+			thread.join();
+		}
 	}
 
 	return 0;
