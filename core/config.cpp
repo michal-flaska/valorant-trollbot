@@ -6,7 +6,6 @@
 static unsigned int hexToUInt(const std::string& s) {
 	unsigned int x = 0;
 	std::stringstream ss;
-	// Remove 0x prefix if present
 	std::string hexStr = s;
 	if (hexStr.length() >= 2 && hexStr.substr(0, 2) == "0x") {
 		hexStr = hexStr.substr(2);
@@ -49,7 +48,6 @@ bool loadConfig(const std::string& path, Config& cfg) {
 		std::string key = toLower(trim(line.substr(0, eq)));
 		std::string val = trim(line.substr(eq + 1));
 
-		// Remove comments from value
 		size_t commentPos = val.find(';');
 		if (commentPos != std::string::npos) {
 			val = trim(val.substr(0, commentPos));
@@ -88,6 +86,13 @@ bool loadConfig(const std::string& path, Config& cfg) {
 			else if (key == "jumpkey") cfg.bhop.jumpKey = hexToUInt(val);
 			else if (key == "startdelay") cfg.bhop.startDelay = std::stoul(val);
 			else if (key == "repeatdelay") cfg.bhop.repeatDelay = std::stoul(val);
+		}
+		else if (section == "dev") {
+			if (key == "showtoggleLogs") cfg.dev.showToggleLogs = val == "1";
+			else if (key == "showstartupinfo") cfg.dev.showStartupInfo = val == "1";
+			else if (key == "mainloopdelay") cfg.dev.mainLoopDelay = std::stoul(val);
+			else if (key == "threadloopdelay") cfg.dev.threadLoopDelay = std::stoul(val);
+			else if (key == "exitkey") cfg.dev.exitKey = hexToUInt(val);
 		}
 	}
 

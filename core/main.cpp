@@ -10,27 +10,33 @@
 #include "../features/mouse-glitch.h"
 #include "../features/spinbot.h"
 
+DevConfig g_devConfig;
+
 void printWelcome() {
-	std::cout << "Valorant Trollbot starting..."
-		<< '\n' << "Make sure to edit config.ini"
-		<< '\n' << "--Mike" << '\n' << '\n';
+	if (g_devConfig.showStartupInfo) {
+		std::cout << "Valorant Trollbot starting..."
+			<< '\n' << "Make sure to edit config.ini"
+			<< '\n' << "--Mike" << '\n' << '\n';
+	}
 }
 
 void printLoadedFeatures(const Config& cfg) {
-	std::cout << "Features loaded:\n";
-	if (cfg.bhop.enabled)
-		std::cout << "- Bhop (" << cfg.bhop.mode << " mode, trigger: 0x" << std::hex << cfg.bhop.triggerKey
-		<< ", jump: 0x" << cfg.bhop.jumpKey << std::dec << ")\n";
-	if (cfg.inspect.enabled)
-		std::cout << "- Inspect spam (" << cfg.inspect.mode << " mode, trigger: 0x" << std::hex << cfg.inspect.triggerKey
-		<< ", inspect: 0x" << cfg.inspect.inspectKey << std::dec << ")\n";
-	if (cfg.mouseGlitch.enabled)
-		std::cout << "- Mouse glitch (" << cfg.mouseGlitch.mode << " mode, trigger: 0x" << std::hex << cfg.mouseGlitch.triggerKey
-		<< std::dec << ")\n";
-	if (cfg.spinbot.enabled)
-		std::cout << "- Spinbot (" << cfg.spinbot.mode << " mode, trigger: 0x" << std::hex << cfg.spinbot.triggerKey
-		<< std::dec << ")\n";
-	std::cout << '\n' << "Press ESC to exit" << '\n' << '\n';
+	if (g_devConfig.showStartupInfo) {
+		std::cout << "Features loaded:\n";
+		if (cfg.bhop.enabled)
+			std::cout << "- Bhop (" << cfg.bhop.mode << " mode, trigger: 0x" << std::hex << cfg.bhop.triggerKey
+			<< ", jump: 0x" << cfg.bhop.jumpKey << std::dec << ")\n";
+		if (cfg.inspect.enabled)
+			std::cout << "- Inspect spam (" << cfg.inspect.mode << " mode, trigger: 0x" << std::hex << cfg.inspect.triggerKey
+			<< ", inspect: 0x" << cfg.inspect.inspectKey << std::dec << ")\n";
+		if (cfg.mouseGlitch.enabled)
+			std::cout << "- Mouse glitch (" << cfg.mouseGlitch.mode << " mode, trigger: 0x" << std::hex << cfg.mouseGlitch.triggerKey
+			<< std::dec << ")\n";
+		if (cfg.spinbot.enabled)
+			std::cout << "- Spinbot (" << cfg.spinbot.mode << " mode, trigger: 0x" << std::hex << cfg.spinbot.triggerKey
+			<< std::dec << ")\n";
+		std::cout << '\n' << "Press ESC to exit" << '\n' << '\n';
+	}
 }
 
 std::atomic<bool> running{ true };
@@ -39,7 +45,7 @@ void bhopThread(const BhopConfig& cfg) {
 	FeatureRunner<BhopConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
 		runBhop(cfg, runner);
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
@@ -47,7 +53,7 @@ void inspectThread(const InspectConfig& cfg) {
 	FeatureRunner<InspectConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
 		runInspect(cfg, runner);
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
@@ -55,7 +61,7 @@ void mouseGlitchThread(const MouseGlitchConfig& cfg) {
 	FeatureRunner<MouseGlitchConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
 		runMouseGlitch(cfg, runner);
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
@@ -63,7 +69,7 @@ void spinbotThread(const SpinbotConfig& cfg) {
 	FeatureRunner<SpinbotConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
 		runSpinbot(cfg, runner);
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
@@ -76,6 +82,8 @@ int main() {
 		system("pause");
 		return 1;
 	}
+
+	g_devConfig = cfg.dev;
 
 	printLoadedFeatures(cfg);
 
@@ -95,12 +103,14 @@ int main() {
 	}
 
 	while (running.load(std::memory_order_relaxed)) {
-		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
+		if (GetAsyncKeyState(g_devConfig.exitKey) & 0x8000) {
 			running.store(false, std::memory_order_relaxed);
-			std::cout << "Shutting down..." << '\n';
+			if (g_devConfig.showStartupInfo) {
+				std::cout << "Shutting down..." << '\n';
+			}
 			break;
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.mainLoopDelay));
 	}
 
 	for (auto& thread : threads) {

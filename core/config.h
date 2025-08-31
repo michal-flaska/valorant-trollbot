@@ -3,7 +3,7 @@
 
 struct FeatureConfig {
 	bool enabled = false;
-	std::string mode = "hold"; // hold/toggle
+	std::string mode = "hold";
 	unsigned int triggerKey = 0;
 	unsigned int startDelay = 0;
 	unsigned int repeatDelay = 50;
@@ -27,11 +27,20 @@ struct BhopConfig : FeatureConfig {
 	unsigned int jumpKey = 0;
 };
 
+struct DevConfig {
+	bool showToggleLogs = true;
+	bool showStartupInfo = true;
+	unsigned int mainLoopDelay = 50;
+	unsigned int threadLoopDelay = 10;
+	unsigned int exitKey = 0x1B;
+};
+
 struct Config {
 	InspectConfig inspect;
 	MouseGlitchConfig mouseGlitch;
 	SpinbotConfig spinbot;
 	BhopConfig bhop;
+	DevConfig dev;
 };
 
 bool loadConfig(const std::string& path, Config& cfg);
