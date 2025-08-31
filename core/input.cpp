@@ -13,10 +13,53 @@ void tapKey(unsigned int vk) {
 }
 
 void moveMouse(int dx, int dy) {
-	INPUT input = {};
-	input.type = INPUT_MOUSE;
-	input.mi.dx = dx;
-	input.mi.dy = dy;
-	input.mi.dwFlags = MOUSEEVENTF_MOVE;
-	SendInput(1, &input, sizeof(INPUT));
+	switch (g_devConfig.mouseMethod) {
+	case 0: {
+		INPUT input = {};
+		input.type = INPUT_MOUSE;
+		input.mi.dx = dx;
+		input.mi.dy = dy;
+		input.mi.dwFlags = MOUSEEVENTF_MOVE;
+		SendInput(1, &input, sizeof(INPUT));
+		break;
+	}
+	case 1: {
+		POINT pos;
+		if (GetCursorPos(&pos)) {
+			SetCursorPos(pos.x + dx, pos.y + dy);
+		}
+		break;
+	}
+	case 2: {
+		mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
+		break;
+	}
+	case 3: {
+		static int counter = 0;
+		counter++;
+		switch (counter % 3) {
+		case 0: {
+			INPUT input = {};
+			input.type = INPUT_MOUSE;
+			input.mi.dx = dx;
+			input.mi.dy = dy;
+			input.mi.dwFlags = MOUSEEVENTF_MOVE;
+			SendInput(1, &input, sizeof(INPUT));
+			break;
+		}
+		case 1: {
+			POINT pos;
+			if (GetCursorPos(&pos)) {
+				SetCursorPos(pos.x + dx, pos.y + dy);
+			}
+			break;
+		}
+		case 2: {
+			mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
+			break;
+		}
+		}
+		break;
+	}
+	}
 }
