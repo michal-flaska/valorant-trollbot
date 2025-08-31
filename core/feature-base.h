@@ -1,46 +1,45 @@
 #pragma once
 #include "config.h"
-#include "logger.h"
 #include <windows.h>
 #include <functional>
+#include <iostream>
 
+// Generic feature runner that handles common trigger/toggle logic
 template<typename ConfigType>
-class FeatureRunner {
-private:
-	bool toggle_ = false;
-	bool lastPressed_ = false;
+void runFeature(const ConfigType& cfg, bool& toggle, bool& lastPressed, std::function<void()> action) {
+	if (!cfg.enabled) return;
 
-public:
-	void run(const ConfigType& config, std::function<void()> action) {
-		if (!config.enabled) return;
+	bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
 
-		const bool pressed = GetAsyncKeyState(config.triggerKey) & 0x8000;
+	// Handle toggle mode state change
+	if (cfg.mode == "toggle" && pressed && !lastPressed) {
+		toggle = !toggle;
+	}
+	lastPressed = pressed;
 
-		if (config.mode == "toggle" && pressed && !lastPressed_) {
-			toggle_ = !toggle_;
-			Logger::debug("Feature toggled: " + std::string(toggle_ ? "ON" : "OFF"));
-		}
-		lastPressed_ = pressed;
+	// Execute action based on mode
+	if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggle)) {
+		action();
+	}
+}
 
-		if ((config.mode == "hold" && pressed) || (config.mode == "toggle" && toggle_)) {
-			action();
+// Specialized version for features that need toggle feedback
+template<typename ConfigType>
+void runFeatureWithFeedback(const ConfigType& cfg, bool& toggle, bool& lastPressed,
+	std::function<void()> action, const char* featureName) {
+	if (!cfg.enabled) return;
+
+	bool pressed = GetAsyncKeyState(cfg.triggerKey) & 0x8000;
+
+	if (cfg.mode == "toggle" && pressed && !lastPressed) {
+		toggle = !toggle;
+		if (featureName) {
+			std::cout << featureName << " " << (toggle ? "ON" : "OFF") << '\n';
 		}
 	}
+	lastPressed = pressed;
 
-	void runWithFeedback(const ConfigType& config, std::function<void()> action,
-		const std::string& featureName) {
-		if (!config.enabled) return;
-
-		const bool pressed = GetAsyncKeyState(config.triggerKey) & 0x8000;
-
-		if (config.mode == "toggle" && pressed && !lastPressed_) {
-			toggle_ = !toggle_;
-			Logger::info(featureName + " " + (toggle_ ? "ON" : "OFF"));
-		}
-		lastPressed_ = pressed;
-
-		if ((config.mode == "hold" && pressed) || (config.mode == "toggle" && toggle_)) {
-			action();
-		}
+	if ((cfg.mode == "hold" && pressed) || (cfg.mode == "toggle" && toggle)) {
+		action();
 	}
-};
+}
