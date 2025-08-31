@@ -1,9 +1,8 @@
 #include "inspect-spam.h"
 #include "../core/input.h"
-#include "../core/feature-base.h"
 
-void runInspect(const InspectConfig& cfg, bool& toggle, bool& lastPressed) {
-	runFeature(cfg, toggle, lastPressed, [&cfg]() {
-		tapKey(cfg.inspectKey);
+void InspectSpam::run(const InspectConfig& config) {
+	runner_.run(config, [&config]() {
+		tapKey(config.inspectKey);
 		});
 }

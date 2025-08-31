@@ -1,20 +1,12 @@
 #include "mouse-glitch.h"
 #include "../core/input.h"
-#include "../core/feature-base.h"
-#include <cstdlib>
-#include <ctime>
+#include <uniform_int_distribution>
 
-static bool seeded = false;
-
-void runMouseGlitch(const MouseGlitchConfig& cfg, bool& toggle, bool& lastPressed) {
-	if (!seeded) {
-		srand(static_cast<unsigned int>(time(nullptr)));
-		seeded = true;
-	}
-
-	runFeatureWithFeedback(cfg, toggle, lastPressed, [&cfg]() {
-		int dx = rand() % (cfg.maxDistance * 2 + 1) - cfg.maxDistance;
-		int dy = rand() % (cfg.maxDistance * 2 + 1) - cfg.maxDistance;
+void MouseGlitch::run(const MouseGlitchConfig& config) {
+	runner_.runWithFeedback(config, [this, &config]() {
+		std::uniform_int_distribution<int> dist(-config.maxDistance, config.maxDistance);
+		const int dx = dist(gen_);
+		const int dy = dist(gen_);
 		moveMouse(dx, dy);
 		}, "Mouse Glitch");
 }

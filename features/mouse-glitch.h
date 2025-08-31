@@ -1,5 +1,15 @@
 #pragma once
 #include "../core/config.h"
-#include <windows.h>
+#include "../core/feature-base.h"
+#include <random>
 
-void runMouseGlitch(const MouseGlitchConfig& cfg, bool& toggle, bool& lastPressed);
+class MouseGlitch {
+private:
+	FeatureRunner<MouseGlitchConfig> runner_;
+	std::random_device rd_;
+	std::mt19937 gen_;
+
+public:
+	MouseGlitch() : gen_(rd_()) {}
+	void run(const MouseGlitchConfig& config);
+};

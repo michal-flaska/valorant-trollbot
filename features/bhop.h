@@ -1,5 +1,11 @@
 #pragma once
 #include "../core/config.h"
-#include <windows.h>
+#include "../core/feature-base.h"
 
-void runBhop(const BhopConfig& cfg, bool& toggle, bool& lastPressed);
+class Bhop {
+private:
+	FeatureRunner<BhopConfig> runner_;
+
+public:
+	void run(const BhopConfig& config);
+};

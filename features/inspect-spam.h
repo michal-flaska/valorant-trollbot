@@ -1,5 +1,11 @@
 #pragma once
 #include "../core/config.h"
-#include <windows.h>
+#include "../core/feature-base.h"
 
-void runInspect(const InspectConfig& cfg, bool& toggle, bool& lastPressed);
+class InspectSpam {
+private:
+	FeatureRunner<InspectConfig> runner_;
+
+public:
+	void run(const InspectConfig& config);
+};

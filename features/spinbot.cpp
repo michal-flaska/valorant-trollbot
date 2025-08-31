@@ -1,10 +1,9 @@
 #include "spinbot.h"
 #include "../core/input.h"
-#include "../core/feature-base.h"
 
-void runSpinbot(const SpinbotConfig& cfg, bool& toggle, bool& lastPressed) {
-	runFeatureWithFeedback(cfg, toggle, lastPressed, [&cfg]() {
-		int dx = (cfg.direction == "left" ? -cfg.speed : cfg.speed);
+void Spinbot::run(const SpinbotConfig& config) {
+	runner_.runWithFeedback(config, [&config]() {
+		const int dx = (config.direction == "left" ? -config.speed : config.speed);
 		moveMouse(dx, 0);
 		}, "Spinbot");
 }

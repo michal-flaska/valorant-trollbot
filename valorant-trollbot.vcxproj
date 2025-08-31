@@ -137,6 +137,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="core\logger.cpp" />
     <ClCompile Include="features\bhop.cpp" />
     <ClCompile Include="features\inspect-spam.cpp" />
     <ClCompile Include="features\mouse-glitch.cpp" />
@@ -146,7 +147,10 @@
     <ClCompile Include="core\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="core\constants.h" />
     <ClInclude Include="core\feature-base.h" />
+    <ClInclude Include="core\logger.h" />
+    <ClInclude Include="core\thread-manager.h" />
     <ClInclude Include="features\bhop.h" />
     <ClInclude Include="features\inspect-spam.h" />
     <ClInclude Include="features\mouse-glitch.h" />
@@ -160,6 +164,9 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ascii.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

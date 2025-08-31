@@ -36,6 +36,9 @@
     <ClCompile Include="features\bhop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="core\logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\config.h">
@@ -59,8 +62,20 @@
     <ClInclude Include="core\feature-base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="core\constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\thread-manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="config.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ascii.ini" />
   </ItemGroup>
 </Project>

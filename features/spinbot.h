@@ -1,5 +1,11 @@
 #pragma once
 #include "../core/config.h"
-#include <windows.h>
+#include "../core/feature-base.h"
 
-void runSpinbot(const SpinbotConfig& cfg, bool& toggle, bool& lastPressed);
+class Spinbot {
+private:
+	FeatureRunner<SpinbotConfig> runner_;
+
+public:
+	void run(const SpinbotConfig& config);
+};
