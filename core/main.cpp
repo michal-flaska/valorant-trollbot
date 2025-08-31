@@ -35,12 +35,35 @@ void printLoadedFeatures(const Config& cfg) {
 
 std::atomic<bool> running{ true };
 
-template<typename ConfigType, typename FeatureFunc>
-void featureThread(const ConfigType& cfg, FeatureFunc featureFunc, unsigned int sleepMs) {
-	FeatureRunner<ConfigType> runner;
+void bhopThread(const BhopConfig& cfg) {
+	FeatureRunner<BhopConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
-		featureFunc(cfg, runner);
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleepMs));
+		runBhop(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+}
+
+void inspectThread(const InspectConfig& cfg) {
+	FeatureRunner<InspectConfig> runner;
+	while (running.load(std::memory_order_relaxed)) {
+		runInspect(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+}
+
+void mouseGlitchThread(const MouseGlitchConfig& cfg) {
+	FeatureRunner<MouseGlitchConfig> runner;
+	while (running.load(std::memory_order_relaxed)) {
+		runMouseGlitch(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+}
+
+void spinbotThread(const SpinbotConfig& cfg) {
+	FeatureRunner<SpinbotConfig> runner;
+	while (running.load(std::memory_order_relaxed)) {
+		runSpinbot(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 }
 
@@ -57,19 +80,18 @@ int main() {
 	printLoadedFeatures(cfg);
 
 	std::vector<std::thread> threads;
-	threads.reserve(4);
 
 	if (cfg.bhop.enabled) {
-		threads.emplace_back(featureThread<BhopConfig>, std::cref(cfg.bhop), runBhop, 10u);
+		threads.emplace_back(bhopThread, cfg.bhop);
 	}
 	if (cfg.inspect.enabled) {
-		threads.emplace_back(featureThread<InspectConfig>, std::cref(cfg.inspect), runInspect, 10u);
+		threads.emplace_back(inspectThread, cfg.inspect);
 	}
 	if (cfg.mouseGlitch.enabled) {
-		threads.emplace_back(featureThread<MouseGlitchConfig>, std::cref(cfg.mouseGlitch), runMouseGlitch, 10u);
+		threads.emplace_back(mouseGlitchThread, cfg.mouseGlitch);
 	}
 	if (cfg.spinbot.enabled) {
-		threads.emplace_back(featureThread<SpinbotConfig>, std::cref(cfg.spinbot), runSpinbot, 10u);
+		threads.emplace_back(spinbotThread, cfg.spinbot);
 	}
 
 	while (running.load(std::memory_order_relaxed)) {
