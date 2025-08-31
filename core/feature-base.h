@@ -5,6 +5,8 @@
 #include <iostream>
 #include <chrono>
 
+extern DevConfig g_devConfig;
+
 template<typename ConfigType>
 class FeatureRunner {
 private:
@@ -24,7 +26,7 @@ public:
 			hasDelayPassed = false;
 			lastActionTime = std::chrono::steady_clock::now();
 
-			if (featureName) {
+			if (featureName && g_devConfig.showToggleLogs) {
 				std::cout << featureName << " " << (toggle ? "ON" : "OFF") << '\n';
 			}
 		}
