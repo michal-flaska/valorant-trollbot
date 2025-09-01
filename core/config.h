@@ -33,6 +33,7 @@ struct DevConfig {
 	unsigned int mainLoopDelay = 50;
 	unsigned int threadLoopDelay = 10;
 	unsigned int exitKey = 0x1B;
+	int mouseMethod = 0;
 };
 
 struct Config {
