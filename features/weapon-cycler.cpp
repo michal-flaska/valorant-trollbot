@@ -2,12 +2,12 @@
 #include "../core/input.h"
 #include <vector>
 
-static std::vector<unsigned int> weaponKeys;
-static bool initialized = false;
-static size_t currentIndex = 0;
+namespace {
+	std::vector<unsigned int> weaponKeys;
+	bool initialized = false;
+	size_t currentIndex = 0;
 
-void runWeaponCycler(const WeaponCyclerConfig& cfg, FeatureRunner<WeaponCyclerConfig>& runner) {
-	if (!initialized) {
+	void initializeWeaponKeys(const WeaponCyclerConfig& cfg) {
 		weaponKeys.clear();
 		weaponKeys.reserve(4);
 
@@ -16,14 +16,22 @@ void runWeaponCycler(const WeaponCyclerConfig& cfg, FeatureRunner<WeaponCyclerCo
 		if (cfg.useKnife) weaponKeys.push_back(cfg.knifeKey);
 		if (cfg.useSpike) weaponKeys.push_back(cfg.spikeKey);
 
-		initialized = true;
 		currentIndex = 0;
+		initialized = true;
 	}
 
-	runner.run(cfg, []() {
+	void cycleWeapon() {
 		if (!weaponKeys.empty()) {
 			tapKey(weaponKeys[currentIndex]);
 			currentIndex = (currentIndex + 1) % weaponKeys.size();
 		}
-		}, "Weapon Cycler");
+	}
+}
+
+void runWeaponCycler(const WeaponCyclerConfig& cfg, FeatureRunner<WeaponCyclerConfig>& runner) {
+	if (!initialized) {
+		initializeWeaponKeys(cfg);
+	}
+
+	runner.run(cfg, cycleWeapon, "Weapon Cycler");
 }

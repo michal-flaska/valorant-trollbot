@@ -36,7 +36,6 @@ struct WeaponCyclerConfig : FeatureConfig {
 	bool useSecondary = true;
 	bool useKnife = true;
 	bool useSpike = false;
-	unsigned int interval = 100;
 };
 
 struct DevConfig {
