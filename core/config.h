@@ -27,6 +27,17 @@ struct BhopConfig : FeatureConfig {
 	unsigned int jumpKey = 0;
 };
 
+struct WeaponCyclerConfig : FeatureConfig {
+	unsigned int primaryKey = 0x31;
+	unsigned int secondaryKey = 0x32;
+	unsigned int knifeKey = 0x33;
+	unsigned int spikeKey = 0x34;
+	bool usePrimary = true;
+	bool useSecondary = true;
+	bool useKnife = true;
+	bool useSpike = false;
+};
+
 struct DevConfig {
 	bool showToggleLogs = true;
 	bool showStartupInfo = true;
@@ -41,6 +52,7 @@ struct Config {
 	MouseGlitchConfig mouseGlitch;
 	SpinbotConfig spinbot;
 	BhopConfig bhop;
+	WeaponCyclerConfig weaponCycler;
 	DevConfig dev;
 };
 

@@ -9,6 +9,7 @@
 #include "../features/inspect-spam.h"
 #include "../features/mouse-glitch.h"
 #include "../features/spinbot.h"
+#include "../features/weapon-cycler.h"
 
 DevConfig g_devConfig;
 
@@ -34,6 +35,9 @@ void printLoadedFeatures(const Config& cfg) {
 			<< std::dec << ")\n";
 		if (cfg.spinbot.enabled)
 			std::cout << "- Spinbot (" << cfg.spinbot.mode << " mode, trigger: 0x" << std::hex << cfg.spinbot.triggerKey
+			<< std::dec << ")\n";
+		if (cfg.weaponCycler.enabled)
+			std::cout << "- Weapon Cycler (" << cfg.weaponCycler.mode << " mode, trigger: 0x" << std::hex << cfg.weaponCycler.triggerKey
 			<< std::dec << ")\n";
 		std::cout << '\n' << "Press ESC to exit" << '\n' << '\n';
 	}
@@ -73,6 +77,14 @@ void spinbotThread(const SpinbotConfig& cfg) {
 	}
 }
 
+void weaponCyclerThread(const WeaponCyclerConfig& cfg) {
+	FeatureRunner<WeaponCyclerConfig> runner;
+	while (running.load(std::memory_order_relaxed)) {
+		runWeaponCycler(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
+	}
+}
+
 int main() {
 	printWelcome();
 
@@ -100,6 +112,9 @@ int main() {
 	}
 	if (cfg.spinbot.enabled) {
 		threads.emplace_back(spinbotThread, cfg.spinbot);
+	}
+	if (cfg.weaponCycler.enabled) {
+		threads.emplace_back(weaponCyclerThread, cfg.weaponCycler);
 	}
 
 	while (running.load(std::memory_order_relaxed)) {
