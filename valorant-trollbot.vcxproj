@@ -144,6 +144,7 @@
     <ClCompile Include="core\config.cpp" />
     <ClCompile Include="core\input.cpp" />
     <ClCompile Include="core\main.cpp" />
+    <ClCompile Include="features\weapon-cycler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\feature-base.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="features\spinbot.h" />
     <ClInclude Include="core\config.h" />
     <ClInclude Include="core\input.h" />
+    <ClInclude Include="features\weapon-cycler.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="config.ini">

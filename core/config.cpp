@@ -87,6 +87,22 @@ bool loadConfig(const std::string& path, Config& cfg) {
 			else if (key == "startdelay") cfg.bhop.startDelay = std::stoul(val);
 			else if (key == "repeatdelay") cfg.bhop.repeatDelay = std::stoul(val);
 		}
+		else if (section == "weaponcycler") {
+			if (key == "enabled") cfg.weaponCycler.enabled = val == "1";
+			else if (key == "mode") cfg.weaponCycler.mode = val;
+			else if (key == "triggerkey") cfg.weaponCycler.triggerKey = hexToUInt(val);
+			else if (key == "primarykey") cfg.weaponCycler.primaryKey = hexToUInt(val);
+			else if (key == "secondarykey") cfg.weaponCycler.secondaryKey = hexToUInt(val);
+			else if (key == "knifekey") cfg.weaponCycler.knifeKey = hexToUInt(val);
+			else if (key == "spikekey") cfg.weaponCycler.spikeKey = hexToUInt(val);
+			else if (key == "useprimary") cfg.weaponCycler.usePrimary = val == "1";
+			else if (key == "usesecondary") cfg.weaponCycler.useSecondary = val == "1";
+			else if (key == "useknife") cfg.weaponCycler.useKnife = val == "1";
+			else if (key == "usespike") cfg.weaponCycler.useSpike = val == "1";
+			else if (key == "interval") cfg.weaponCycler.interval = std::stoul(val);
+			else if (key == "startdelay") cfg.weaponCycler.startDelay = std::stoul(val);
+			else if (key == "repeatdelay") cfg.weaponCycler.repeatDelay = std::stoul(val);
+		}
 		else if (section == "dev") {
 			if (key == "showtoggleLogs") cfg.dev.showToggleLogs = val == "1";
 			else if (key == "showstartupinfo") cfg.dev.showStartupInfo = val == "1";

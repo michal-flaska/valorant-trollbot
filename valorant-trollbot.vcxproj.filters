@@ -36,6 +36,9 @@
     <ClCompile Include="features\bhop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="features\weapon-cycler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\config.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="core\feature-base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="features\weapon-cycler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
