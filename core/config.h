@@ -38,6 +38,18 @@ struct WeaponCyclerConfig : FeatureConfig {
 	bool useSpike = false;
 };
 
+struct CustomKeySpamConfig : FeatureConfig {
+	unsigned int spamKey = 0;
+};
+
+struct VoiceChatSpamConfig : FeatureConfig {
+	unsigned int voiceKey = 0;
+};
+
+struct InteractSpamConfig : FeatureConfig {
+	unsigned int interactKey = 0;
+};
+
 struct DevConfig {
 	bool showToggleLogs = true;
 	bool showStartupInfo = true;
@@ -53,6 +65,9 @@ struct Config {
 	SpinbotConfig spinbot;
 	BhopConfig bhop;
 	WeaponCyclerConfig weaponCycler;
+	CustomKeySpamConfig customKeySpam;
+	VoiceChatSpamConfig voiceChatSpam;
+	InteractSpamConfig interactSpam;
 	DevConfig dev;
 };
 

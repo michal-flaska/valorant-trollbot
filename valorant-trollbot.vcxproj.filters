@@ -39,6 +39,15 @@
     <ClCompile Include="features\weapon-cycler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="features\interact-spam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="features\voice-chat-spam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="features\custom-key-spam.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\config.h">
@@ -63,6 +72,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="features\weapon-cycler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="features\interact-spam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="features\voice-chat-spam.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="features\custom-key-spam.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -102,6 +102,30 @@ bool loadConfig(const std::string& path, Config& cfg) {
 			else if (key == "startdelay") cfg.weaponCycler.startDelay = std::stoul(val);
 			else if (key == "repeatdelay") cfg.weaponCycler.repeatDelay = std::stoul(val);
 		}
+		else if (section == "customkeyspam") {
+			if (key == "enabled") cfg.customKeySpam.enabled = val == "1";
+			else if (key == "mode") cfg.customKeySpam.mode = val;
+			else if (key == "triggerkey") cfg.customKeySpam.triggerKey = hexToUInt(val);
+			else if (key == "spamkey") cfg.customKeySpam.spamKey = hexToUInt(val);
+			else if (key == "startdelay") cfg.customKeySpam.startDelay = std::stoul(val);
+			else if (key == "repeatdelay") cfg.customKeySpam.repeatDelay = std::stoul(val);
+		}
+		else if (section == "voicechatspam") {
+			if (key == "enabled") cfg.voiceChatSpam.enabled = val == "1";
+			else if (key == "mode") cfg.voiceChatSpam.mode = val;
+			else if (key == "triggerkey") cfg.voiceChatSpam.triggerKey = hexToUInt(val);
+			else if (key == "voicekey") cfg.voiceChatSpam.voiceKey = hexToUInt(val);
+			else if (key == "startdelay") cfg.voiceChatSpam.startDelay = std::stoul(val);
+			else if (key == "repeatdelay") cfg.voiceChatSpam.repeatDelay = std::stoul(val);
+		}
+		else if (section == "interactspam") {
+			if (key == "enabled") cfg.interactSpam.enabled = val == "1";
+			else if (key == "mode") cfg.interactSpam.mode = val;
+			else if (key == "triggerkey") cfg.interactSpam.triggerKey = hexToUInt(val);
+			else if (key == "interactkey") cfg.interactSpam.interactKey = hexToUInt(val);
+			else if (key == "startdelay") cfg.interactSpam.startDelay = std::stoul(val);
+			else if (key == "repeatdelay") cfg.interactSpam.repeatDelay = std::stoul(val);
+		}
 		else if (section == "dev") {
 			if (key == "showtoggelogs") cfg.dev.showToggleLogs = val == "1";
 			else if (key == "showstartupinfo") cfg.dev.showStartupInfo = val == "1";

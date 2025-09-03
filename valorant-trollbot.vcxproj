@@ -138,22 +138,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="features\bhop.cpp" />
+    <ClCompile Include="features\custom-key-spam.cpp" />
     <ClCompile Include="features\inspect-spam.cpp" />
+    <ClCompile Include="features\interact-spam.cpp" />
     <ClCompile Include="features\mouse-glitch.cpp" />
     <ClCompile Include="features\spinbot.cpp" />
     <ClCompile Include="core\config.cpp" />
     <ClCompile Include="core\input.cpp" />
     <ClCompile Include="core\main.cpp" />
+    <ClCompile Include="features\voice-chat-spam.cpp" />
     <ClCompile Include="features\weapon-cycler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\feature-base.h" />
     <ClInclude Include="features\bhop.h" />
+    <ClInclude Include="features\custom-key-spam.h" />
     <ClInclude Include="features\inspect-spam.h" />
+    <ClInclude Include="features\interact-spam.h" />
     <ClInclude Include="features\mouse-glitch.h" />
     <ClInclude Include="features\spinbot.h" />
     <ClInclude Include="core\config.h" />
     <ClInclude Include="core\input.h" />
+    <ClInclude Include="features\voice-chat-spam.h" />
     <ClInclude Include="features\weapon-cycler.h" />
   </ItemGroup>
   <ItemGroup>
