@@ -10,6 +10,9 @@
 #include "../features/mouse-glitch.h"
 #include "../features/spinbot.h"
 #include "../features/weapon-cycler.h"
+#include "../features/custom-key-spam.h"
+#include "../features/voice-chat-spam.h"
+#include "../features/interact-spam.h"
 
 DevConfig g_devConfig;
 
@@ -39,6 +42,15 @@ void printLoadedFeatures(const Config& cfg) {
 		if (cfg.weaponCycler.enabled)
 			std::cout << "- Weapon Cycler (" << cfg.weaponCycler.mode << " mode, trigger: 0x" << std::hex << cfg.weaponCycler.triggerKey
 			<< std::dec << ")\n";
+		if (cfg.customKeySpam.enabled)
+			std::cout << "- Custom Key Spam (" << cfg.customKeySpam.mode << " mode, trigger: 0x" << std::hex << cfg.customKeySpam.triggerKey
+			<< ", spam: 0x" << cfg.customKeySpam.spamKey << std::dec << ")\n";
+		if (cfg.voiceChatSpam.enabled)
+			std::cout << "- Voice Chat Spam (" << cfg.voiceChatSpam.mode << " mode, trigger: 0x" << std::hex << cfg.voiceChatSpam.triggerKey
+			<< ", voice: 0x" << cfg.voiceChatSpam.voiceKey << std::dec << ")\n";
+		if (cfg.interactSpam.enabled)
+			std::cout << "- Interact Spam (" << cfg.interactSpam.mode << " mode, trigger: 0x" << std::hex << cfg.interactSpam.triggerKey
+			<< ", interact: 0x" << cfg.interactSpam.interactKey << std::dec << ")\n";
 		std::cout << '\n' << "Press ESC to exit" << '\n' << '\n';
 	}
 }
@@ -85,6 +97,30 @@ void weaponCyclerThread(const WeaponCyclerConfig& cfg) {
 	}
 }
 
+void customKeySpamThread(const CustomKeySpamConfig& cfg) {
+	FeatureRunner<CustomKeySpamConfig> runner;
+	while (running.load(std::memory_order_relaxed)) {
+		runCustomKeySpam(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
+	}
+}
+
+void voiceChatSpamThread(const VoiceChatSpamConfig& cfg) {
+	FeatureRunner<VoiceChatSpamConfig> runner;
+	while (running.load(std::memory_order_relaxed)) {
+		runVoiceChatSpam(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
+	}
+}
+
+void interactSpamThread(const InteractSpamConfig& cfg) {
+	FeatureRunner<InteractSpamConfig> runner;
+	while (running.load(std::memory_order_relaxed)) {
+		runInteractSpam(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
+	}
+}
+
 int main() {
 	printWelcome();
 
@@ -115,6 +151,15 @@ int main() {
 	}
 	if (cfg.weaponCycler.enabled) {
 		threads.emplace_back(weaponCyclerThread, cfg.weaponCycler);
+	}
+	if (cfg.customKeySpam.enabled) {
+		threads.emplace_back(customKeySpamThread, cfg.customKeySpam);
+	}
+	if (cfg.voiceChatSpam.enabled) {
+		threads.emplace_back(voiceChatSpamThread, cfg.voiceChatSpam);
+	}
+	if (cfg.interactSpam.enabled) {
+		threads.emplace_back(interactSpamThread, cfg.interactSpam);
 	}
 
 	while (running.load(std::memory_order_relaxed)) {
