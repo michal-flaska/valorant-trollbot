@@ -45,18 +45,15 @@ Make sure `config.ini` is in the same folder as the .exe file.
 Edit `config.ini` to customize everything. The hex codes for keys can be found [here](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
 
 Some examples:
-
-NUMPAD KEYS:
-- 0x60 - Num. 0 key
-- 0x61 - Num. 1 key
-- 0x62 - Num. 2 key
-- 0x63 - Num. 3 key
-- 0x64 - Num. 4 key
-- 0x65 - Num. 5 key
-- 0x66 - Num. 6 key
-- 0x67 - Num. 7 key
-- 0x68 - Num. 8 key
-- 0x69 - Num. 9 key
+```ini
+[Bhop]
+Enabled=1
+Mode=hold
+TriggerKey=0x06 ; MB 5
+JumpKey=0x20    ; SPACEBAR
+StartDelay=500
+RepeatDelay=15
+```
 
 All delays are in milliseconds. Set `Enabled=0` to disable features you don't want.
 
