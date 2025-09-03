@@ -44,7 +44,7 @@ Make sure `config.ini` is in the same folder as the .exe file.
 
 Edit `config.ini` to customize everything. The hex codes for keys can be found [here](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
 
-Some examples:
+bhop example:
 ```ini
 [Bhop]
 Enabled=1
