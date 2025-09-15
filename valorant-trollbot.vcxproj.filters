@@ -48,6 +48,9 @@
     <ClCompile Include="features\custom-key-spam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="features\chat-spammer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\config.h">
@@ -83,9 +86,13 @@
     <ClInclude Include="features\custom-key-spam.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="features\chat-spammer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="config.ini" />
+    <CopyFileToFolders Include="messages.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config-ascii.ini" />

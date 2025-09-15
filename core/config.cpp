@@ -126,6 +126,17 @@ bool loadConfig(const std::string& path, Config& cfg) {
 			else if (key == "startdelay") cfg.interactSpam.startDelay = std::stoul(val);
 			else if (key == "repeatdelay") cfg.interactSpam.repeatDelay = std::stoul(val);
 		}
+		else if (section == "chatspammer") {
+			if (key == "enabled") cfg.chatSpammer.enabled = val == "1";
+			else if (key == "mode") cfg.chatSpammer.mode = val;
+			else if (key == "triggerkey") cfg.chatSpammer.triggerKey = hexToUInt(val);
+			else if (key == "chatkey") cfg.chatSpammer.chatKey = hexToUInt(val);
+			else if (key == "messagefile") cfg.chatSpammer.messageFile = val;
+			else if (key == "messageorder") cfg.chatSpammer.messageOrder = val;
+			else if (key == "restoreclipboard") cfg.chatSpammer.restoreClipboard = val == "1";
+			else if (key == "startdelay") cfg.chatSpammer.startDelay = std::stoul(val);
+			else if (key == "repeatdelay") cfg.chatSpammer.repeatDelay = std::stoul(val);
+		}
 		else if (section == "dev") {
 			if (key == "showtoggelogs") cfg.dev.showToggleLogs = val == "1";
 			else if (key == "showstartupinfo") cfg.dev.showStartupInfo = val == "1";
@@ -137,4 +148,21 @@ bool loadConfig(const std::string& path, Config& cfg) {
 	}
 
 	return true;
+}
+
+bool loadMessages(const std::string& path, std::vector<std::string>& messages) {
+	std::ifstream file(path);
+	if (!file.is_open()) return false;
+
+	messages.clear();
+	std::string line;
+
+	while (std::getline(file, line)) {
+		line = trim(line);
+		if (!line.empty() && line[0] != ';' && line[0] != '#') {
+			messages.push_back(line);
+		}
+	}
+
+	return !messages.empty();
 }

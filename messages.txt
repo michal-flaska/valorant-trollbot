@@ -1,0 +1,44 @@
+; Chat messages for the spammer (one per line)
+; Lines starting with ; or # are ignored
+; Keep messages appropriate and don't be toxic!
+
+nice shot!
+gg wp
+clutch or kick
+eco round
+force buy?
+rush B
+no stop
+rotate rotate
+they're eco
+full save
+watch flanks
+check corners
+nice try
+unlucky
+reset
+one more round
+let's go team!
+we got this
+focus up
+play for picks
+default setup
+slow it down
+wait for utility
+good comms
+nice trade
+plant for long
+play time
+save weapons
+anti-eco
+full buy round
+watch the push
+they're forcing
+back site
+front site
+connector
+mid control
+long angles
+close range
+utility usage
+economy reset

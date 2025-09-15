@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="features\bhop.cpp" />
+    <ClCompile Include="features\chat-spammer.cpp" />
     <ClCompile Include="features\custom-key-spam.cpp" />
     <ClCompile Include="features\inspect-spam.cpp" />
     <ClCompile Include="features\interact-spam.cpp" />
@@ -152,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="core\feature-base.h" />
     <ClInclude Include="features\bhop.h" />
+    <ClInclude Include="features\chat-spammer.h" />
     <ClInclude Include="features\custom-key-spam.h" />
     <ClInclude Include="features\inspect-spam.h" />
     <ClInclude Include="features\interact-spam.h" />
@@ -171,6 +173,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config-ascii.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="messages.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
