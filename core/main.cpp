@@ -13,6 +13,7 @@
 #include "../features/custom-key-spam.h"
 #include "../features/voice-chat-spam.h"
 #include "../features/interact-spam.h"
+#include "../features/chat-spammer.h"
 
 DevConfig g_devConfig;
 
@@ -51,6 +52,9 @@ void printLoadedFeatures(const Config& cfg) {
 		if (cfg.interactSpam.enabled)
 			std::cout << "- Interact Spam (" << cfg.interactSpam.mode << " mode, trigger: 0x" << std::hex << cfg.interactSpam.triggerKey
 			<< ", interact: 0x" << cfg.interactSpam.interactKey << std::dec << ")\n";
+		if (cfg.chatSpammer.enabled)
+			std::cout << "- Chat Spammer (" << cfg.chatSpammer.mode << " mode, trigger: 0x" << std::hex << cfg.chatSpammer.triggerKey
+			<< ", file: " << cfg.chatSpammer.messageFile << std::dec << ")\n";
 		std::cout << '\n' << "Press ESC to exit" << '\n' << '\n';
 	}
 }
@@ -121,6 +125,14 @@ void interactSpamThread(const InteractSpamConfig& cfg) {
 	}
 }
 
+void chatSpammerThread(const ChatSpammerConfig& cfg) {
+	FeatureRunner<ChatSpammerConfig> runner;
+	while (running.load(std::memory_order_relaxed)) {
+		runChatSpammer(cfg, runner);
+		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
+	}
+}
+
 int main() {
 	printWelcome();
 
@@ -160,6 +172,9 @@ int main() {
 	}
 	if (cfg.interactSpam.enabled) {
 		threads.emplace_back(interactSpamThread, cfg.interactSpam);
+	}
+	if (cfg.chatSpammer.enabled) {
+		threads.emplace_back(chatSpammerThread, cfg.chatSpammer);
 	}
 
 	while (running.load(std::memory_order_relaxed)) {
