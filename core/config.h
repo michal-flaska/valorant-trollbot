@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 struct FeatureConfig {
 	bool enabled = false;
@@ -50,6 +51,13 @@ struct InteractSpamConfig : FeatureConfig {
 	unsigned int interactKey = 0;
 };
 
+struct ChatSpammerConfig : FeatureConfig {
+	unsigned int chatKey = 0x0D;  // Enter key (default)
+	std::string messageFile = "messages.txt";
+	std::string messageOrder = "sequential";  // "sequential" or "random"
+	bool restoreClipboard = true;  // Restore original clipboard after use
+};
+
 struct DevConfig {
 	bool showToggleLogs = true;
 	bool showStartupInfo = true;
@@ -68,7 +76,9 @@ struct Config {
 	CustomKeySpamConfig customKeySpam;
 	VoiceChatSpamConfig voiceChatSpam;
 	InteractSpamConfig interactSpam;
+	ChatSpammerConfig chatSpammer;
 	DevConfig dev;
 };
 
 bool loadConfig(const std::string& path, Config& cfg);
+bool loadMessages(const std::string& path, std::vector<std::string>& messages);

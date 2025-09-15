@@ -1,0 +1,17 @@
+; Chat messages for the spammer (one per line)
+; Lines starting with ; or # are ignored
+; Keep messages appropriate and don't be toxic!
+; THESE CURRENT MESSAGES ARE HERE AS A SHOWCASE, MY INSPIRATION WAS SHARKHACK's CHAT SPAM FEATURE (CS2 CHEAT)
+
+nice try fellas
+you just got crushed by valorant trollbot
+aimtrainer is free!
+get the latest version of valorant trollbot here: github.com/michal-flaska/valorant-trollbot
+i bet you're tired of losing
+c'mon, playing against me isn't that difficult, i'm not cheating
+how did you hit the install button ?
+EZ
+even vanguard doesn't help
+edaters on team? problem solved :D
+jarvis clip that
+just uninstall at this point
