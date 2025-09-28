@@ -61,30 +61,27 @@ namespace {
 
 	void openChat(const ChatSpammerConfig& cfg) {
 		if (cfg.chatTarget == "all") {
-			// For ALL chat: SHIFT + ENTER (held together)
-			INPUT inputs[4] = {};
+			// For ALL chat: Hold SHIFT, press ENTER, release both
+			// First: Hold SHIFT down
+			INPUT shiftDown = {};
+			shiftDown.type = INPUT_KEYBOARD;
+			shiftDown.ki.wVk = VK_SHIFT;
+			shiftDown.ki.dwFlags = 0;
+			SendInput(1, &shiftDown, sizeof(INPUT));
 
-			// Shift down
-			inputs[0].type = INPUT_KEYBOARD;
-			inputs[0].ki.wVk = VK_SHIFT;
-			inputs[0].ki.dwFlags = 0;
+			Sleep(10); // Small delay to ensure shift is registered
 
-			// Enter down (while shift is held)
-			inputs[1].type = INPUT_KEYBOARD;
-			inputs[1].ki.wVk = static_cast<WORD>(cfg.chatKey);
-			inputs[1].ki.dwFlags = 0;
+			// Then: Press and release ENTER while SHIFT is held
+			tapKey(cfg.chatKey);
 
-			// Enter up
-			inputs[2].type = INPUT_KEYBOARD;
-			inputs[2].ki.wVk = static_cast<WORD>(cfg.chatKey);
-			inputs[2].ki.dwFlags = KEYEVENTF_KEYUP;
+			Sleep(10); // Small delay before releasing shift
 
-			// Shift up
-			inputs[3].type = INPUT_KEYBOARD;
-			inputs[3].ki.wVk = VK_SHIFT;
-			inputs[3].ki.dwFlags = KEYEVENTF_KEYUP;
-
-			SendInput(4, inputs, sizeof(INPUT));
+			// Finally: Release SHIFT
+			INPUT shiftUp = {};
+			shiftUp.type = INPUT_KEYBOARD;
+			shiftUp.ki.wVk = VK_SHIFT;
+			shiftUp.ki.dwFlags = KEYEVENTF_KEYUP;
+			SendInput(1, &shiftUp, sizeof(INPUT));
 		}
 		else {
 			// For TEAM chat: just ENTER
