@@ -26,6 +26,7 @@ namespace {
 
 		if (g_devConfig.showStartupInfo) {
 			std::cout << "Chat Spammer loaded " << messages.size() << " messages from " << cfg.messageFile << '\n';
+			std::cout << "Chat Target: " << cfg.chatTarget << '\n';
 		}
 	}
 
@@ -58,6 +59,39 @@ namespace {
 		}
 	}
 
+	void openChat(const ChatSpammerConfig& cfg) {
+		if (cfg.chatTarget == "all") {
+			// For ALL chat: SHIFT + ENTER (held together)
+			INPUT inputs[4] = {};
+
+			// Shift down
+			inputs[0].type = INPUT_KEYBOARD;
+			inputs[0].ki.wVk = VK_SHIFT;
+			inputs[0].ki.dwFlags = 0;
+
+			// Enter down (while shift is held)
+			inputs[1].type = INPUT_KEYBOARD;
+			inputs[1].ki.wVk = static_cast<WORD>(cfg.chatKey);
+			inputs[1].ki.dwFlags = 0;
+
+			// Enter up
+			inputs[2].type = INPUT_KEYBOARD;
+			inputs[2].ki.wVk = static_cast<WORD>(cfg.chatKey);
+			inputs[2].ki.dwFlags = KEYEVENTF_KEYUP;
+
+			// Shift up
+			inputs[3].type = INPUT_KEYBOARD;
+			inputs[3].ki.wVk = VK_SHIFT;
+			inputs[3].ki.dwFlags = KEYEVENTF_KEYUP;
+
+			SendInput(4, inputs, sizeof(INPUT));
+		}
+		else {
+			// For TEAM chat: just ENTER
+			tapKey(cfg.chatKey);
+		}
+	}
+
 	void sendMessage(const ChatSpammerConfig& cfg) {
 		std::string message = getNextMessage(cfg);
 		if (message.empty()) return;
@@ -71,15 +105,15 @@ namespace {
 			return;
 		}
 
-		// Open chat
-		tapKey(cfg.chatKey);
-		Sleep(50);  // Small delay to ensure chat opens
+		// Open appropriate chat (team or all)
+		openChat(cfg);
+		Sleep(75);  // Increased delay to ensure chat opens properly
 
 		// Paste message
 		pasteFromClipboard();
-		Sleep(25);  // Small delay before sending
+		Sleep(50);  // Delay before sending
 
-		// Send message
+		// Send message (always just Enter for sending)
 		tapKey(VK_RETURN);
 
 		// Restore clipboard if configured
