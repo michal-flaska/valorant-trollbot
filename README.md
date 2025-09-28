@@ -5,7 +5,7 @@
 
 ## Known Issues
 > [!CAUTION]
-> **Chat Spammer - ALL Chat Not Working**
+> **Chat Spammer - ALL Chat Not Working**<br />
 > The chat spammer currently only sends messages to team chat, even when `ChatTarget=all` is configured. The SHIFT+ENTER combination for all chat isn't being recognized properly by Valorant. Multiple input methods have been attempted but the issue persists. Contributions welcome!
 
 ## What is this?
