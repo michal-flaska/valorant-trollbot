@@ -14,16 +14,6 @@ struct InspectConfig : FeatureConfig {
 	unsigned int inspectKey = 0;
 };
 
-struct MouseGlitchConfig : FeatureConfig {
-	int maxDistance = 10;
-};
-
-struct SpinbotConfig : FeatureConfig {
-	std::string direction = "right";
-	int speed = 20;
-	int interval = 15;
-};
-
 struct BhopConfig : FeatureConfig {
 	unsigned int jumpKey = 0;
 };
@@ -52,11 +42,11 @@ struct InteractSpamConfig : FeatureConfig {
 };
 
 struct ChatSpammerConfig : FeatureConfig {
-	unsigned int chatKey = 0x0D;  // Enter key (default)
+	unsigned int chatKey = 0x0D;
 	std::string messageFile = "messages.txt";
-	std::string messageOrder = "sequential";  // "sequential" or "random"
-	std::string chatTarget = "team";  // "team" or "all"
-	bool restoreClipboard = true;  // Restore original clipboard after use
+	std::string messageOrder = "sequential";
+	std::string chatTarget = "team";
+	bool restoreClipboard = true;
 };
 
 struct DevConfig {
@@ -65,13 +55,10 @@ struct DevConfig {
 	unsigned int mainLoopDelay = 50;
 	unsigned int threadLoopDelay = 10;
 	unsigned int exitKey = 0x1B;
-	int mouseMethod = 0;
 };
 
 struct Config {
 	InspectConfig inspect;
-	MouseGlitchConfig mouseGlitch;
-	SpinbotConfig spinbot;
 	BhopConfig bhop;
 	WeaponCyclerConfig weaponCycler;
 	CustomKeySpamConfig customKeySpam;
