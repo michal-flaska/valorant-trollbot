@@ -26,22 +26,26 @@ namespace {
 
 		if (g_devConfig.showStartupInfo) {
 			std::cout << "Chat Spammer loaded " << messages.size() << " messages from " << cfg.messageFile << '\n';
+			std::cout << "Chat Target: " << cfg.chatTarget << '\n';
 		}
 	}
 
 	std::string getNextMessage(const ChatSpammerConfig& cfg) {
 		if (messages.empty()) return "";
 
+		std::string msg;
 		if (cfg.messageOrder == "random") {
 			std::uniform_int_distribution<size_t> dist(0, messages.size() - 1);
-			return messages[dist(gen)];
+			msg = messages[dist(gen)];
 		}
 		else {
-			// Sequential
-			std::string msg = messages[currentIndex];
+			msg = messages[currentIndex];
 			currentIndex = (currentIndex + 1) % messages.size();
-			return msg;
 		}
+
+		// Prepend chat command
+		std::string prefix = (cfg.chatTarget == "all") ? "/all " : "/team ";
+		return prefix + msg;
 	}
 
 	void saveOriginalClipboard(const ChatSpammerConfig& cfg) {
@@ -62,29 +66,24 @@ namespace {
 		std::string message = getNextMessage(cfg);
 		if (message.empty()) return;
 
-		// Save original clipboard if needed
 		saveOriginalClipboard(cfg);
 
-		// Copy message to clipboard
 		if (!setClipboardText(message)) {
 			std::cerr << "Failed to set clipboard text\n";
 			return;
 		}
 
-		// Open chat
+		// Open chat (just Enter - command will handle routing)
 		tapKey(cfg.chatKey);
-		Sleep(50);  // Small delay to ensure chat opens
+		Sleep(75);
 
-		// Paste message
+		// Paste and send
 		pasteFromClipboard();
-		Sleep(25);  // Small delay before sending
-
-		// Send message
+		Sleep(50);
 		tapKey(VK_RETURN);
 
-		// Restore clipboard if configured
 		if (cfg.restoreClipboard) {
-			Sleep(25);  // Small delay before restoring
+			Sleep(25);
 			restoreOriginalClipboard(cfg);
 		}
 	}
