@@ -61,24 +61,6 @@ bool loadConfig(const std::string& path, Config& cfg) {
 			else if (key == "startdelay") cfg.inspect.startDelay = std::stoul(val);
 			else if (key == "repeatdelay") cfg.inspect.repeatDelay = std::stoul(val);
 		}
-		else if (section == "mouseglitch") {
-			if (key == "enabled") cfg.mouseGlitch.enabled = val == "1";
-			else if (key == "mode") cfg.mouseGlitch.mode = val;
-			else if (key == "triggerkey") cfg.mouseGlitch.triggerKey = hexToUInt(val);
-			else if (key == "maxdistance") cfg.mouseGlitch.maxDistance = std::stoi(val);
-			else if (key == "startdelay") cfg.mouseGlitch.startDelay = std::stoul(val);
-			else if (key == "repeatdelay") cfg.mouseGlitch.repeatDelay = std::stoul(val);
-		}
-		else if (section == "spinbot") {
-			if (key == "enabled") cfg.spinbot.enabled = val == "1";
-			else if (key == "mode") cfg.spinbot.mode = val;
-			else if (key == "triggerkey") cfg.spinbot.triggerKey = hexToUInt(val);
-			else if (key == "direction") cfg.spinbot.direction = val;
-			else if (key == "speed") cfg.spinbot.speed = std::stoi(val);
-			else if (key == "interval") cfg.spinbot.interval = std::stoi(val);
-			else if (key == "startdelay") cfg.spinbot.startDelay = std::stoul(val);
-			else if (key == "repeatdelay") cfg.spinbot.repeatDelay = std::stoul(val);
-		}
 		else if (section == "bhop") {
 			if (key == "enabled") cfg.bhop.enabled = val == "1";
 			else if (key == "mode") cfg.bhop.mode = val;
@@ -126,15 +108,43 @@ bool loadConfig(const std::string& path, Config& cfg) {
 			else if (key == "startdelay") cfg.interactSpam.startDelay = std::stoul(val);
 			else if (key == "repeatdelay") cfg.interactSpam.repeatDelay = std::stoul(val);
 		}
+		else if (section == "chatspammer") {
+			if (key == "enabled") cfg.chatSpammer.enabled = val == "1";
+			else if (key == "mode") cfg.chatSpammer.mode = val;
+			else if (key == "triggerkey") cfg.chatSpammer.triggerKey = hexToUInt(val);
+			else if (key == "chatkey") cfg.chatSpammer.chatKey = hexToUInt(val);
+			else if (key == "messagefile") cfg.chatSpammer.messageFile = val;
+			else if (key == "messageorder") cfg.chatSpammer.messageOrder = val;
+			else if (key == "chattarget") cfg.chatSpammer.chatTarget = toLower(val);
+			else if (key == "restoreclipboard") cfg.chatSpammer.restoreClipboard = val == "1";
+			else if (key == "startdelay") cfg.chatSpammer.startDelay = std::stoul(val);
+			else if (key == "repeatdelay") cfg.chatSpammer.repeatDelay = std::stoul(val);
+		}
 		else if (section == "dev") {
 			if (key == "showtoggelogs") cfg.dev.showToggleLogs = val == "1";
 			else if (key == "showstartupinfo") cfg.dev.showStartupInfo = val == "1";
 			else if (key == "mainloopdelay") cfg.dev.mainLoopDelay = std::stoul(val);
 			else if (key == "threadloopdelay") cfg.dev.threadLoopDelay = std::stoul(val);
 			else if (key == "exitkey") cfg.dev.exitKey = hexToUInt(val);
-			else if (key == "mousemethod") cfg.dev.mouseMethod = std::stoi(val);
 		}
 	}
 
 	return true;
+}
+
+bool loadMessages(const std::string& path, std::vector<std::string>& messages) {
+	std::ifstream file(path);
+	if (!file.is_open()) return false;
+
+	messages.clear();
+	std::string line;
+
+	while (std::getline(file, line)) {
+		line = trim(line);
+		if (!line.empty() && line[0] != ';' && line[0] != '#') {
+			messages.push_back(line);
+		}
+	}
+
+	return !messages.empty();
 }

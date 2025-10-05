@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 struct FeatureConfig {
 	bool enabled = false;
@@ -11,16 +12,6 @@ struct FeatureConfig {
 
 struct InspectConfig : FeatureConfig {
 	unsigned int inspectKey = 0;
-};
-
-struct MouseGlitchConfig : FeatureConfig {
-	int maxDistance = 10;
-};
-
-struct SpinbotConfig : FeatureConfig {
-	std::string direction = "right";
-	int speed = 20;
-	int interval = 15;
 };
 
 struct BhopConfig : FeatureConfig {
@@ -50,25 +41,32 @@ struct InteractSpamConfig : FeatureConfig {
 	unsigned int interactKey = 0;
 };
 
+struct ChatSpammerConfig : FeatureConfig {
+	unsigned int chatKey = 0x0D;
+	std::string messageFile = "messages.txt";
+	std::string messageOrder = "sequential";
+	std::string chatTarget = "team";
+	bool restoreClipboard = true;
+};
+
 struct DevConfig {
 	bool showToggleLogs = true;
 	bool showStartupInfo = true;
 	unsigned int mainLoopDelay = 50;
 	unsigned int threadLoopDelay = 10;
 	unsigned int exitKey = 0x1B;
-	int mouseMethod = 0;
 };
 
 struct Config {
 	InspectConfig inspect;
-	MouseGlitchConfig mouseGlitch;
-	SpinbotConfig spinbot;
 	BhopConfig bhop;
 	WeaponCyclerConfig weaponCycler;
 	CustomKeySpamConfig customKeySpam;
 	VoiceChatSpamConfig voiceChatSpam;
 	InteractSpamConfig interactSpam;
+	ChatSpammerConfig chatSpammer;
 	DevConfig dev;
 };
 
 bool loadConfig(const std::string& path, Config& cfg);
+bool loadMessages(const std::string& path, std::vector<std::string>& messages);
