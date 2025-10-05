@@ -33,16 +33,19 @@ namespace {
 	std::string getNextMessage(const ChatSpammerConfig& cfg) {
 		if (messages.empty()) return "";
 
+		std::string msg;
 		if (cfg.messageOrder == "random") {
 			std::uniform_int_distribution<size_t> dist(0, messages.size() - 1);
-			return messages[dist(gen)];
+			msg = messages[dist(gen)];
 		}
 		else {
-			// Sequential
-			std::string msg = messages[currentIndex];
+			msg = messages[currentIndex];
 			currentIndex = (currentIndex + 1) % messages.size();
-			return msg;
 		}
+
+		// Prepend chat command
+		std::string prefix = (cfg.chatTarget == "all") ? "/all " : "/team ";
+		return prefix + msg;
 	}
 
 	void saveOriginalClipboard(const ChatSpammerConfig& cfg) {
@@ -59,63 +62,28 @@ namespace {
 		}
 	}
 
-	void openChat(const ChatSpammerConfig& cfg) {
-		if (cfg.chatTarget == "all") {
-			// For ALL chat: Hold SHIFT, press ENTER, release both
-			// First: Hold SHIFT down
-			INPUT shiftDown = {};
-			shiftDown.type = INPUT_KEYBOARD;
-			shiftDown.ki.wVk = VK_SHIFT;
-			shiftDown.ki.dwFlags = 0;
-			SendInput(1, &shiftDown, sizeof(INPUT));
-
-			Sleep(10); // Small delay to ensure shift is registered
-
-			// Then: Press and release ENTER while SHIFT is held
-			tapKey(cfg.chatKey);
-
-			Sleep(10); // Small delay before releasing shift
-
-			// Finally: Release SHIFT
-			INPUT shiftUp = {};
-			shiftUp.type = INPUT_KEYBOARD;
-			shiftUp.ki.wVk = VK_SHIFT;
-			shiftUp.ki.dwFlags = KEYEVENTF_KEYUP;
-			SendInput(1, &shiftUp, sizeof(INPUT));
-		}
-		else {
-			// For TEAM chat: just ENTER
-			tapKey(cfg.chatKey);
-		}
-	}
-
 	void sendMessage(const ChatSpammerConfig& cfg) {
 		std::string message = getNextMessage(cfg);
 		if (message.empty()) return;
 
-		// Save original clipboard if needed
 		saveOriginalClipboard(cfg);
 
-		// Copy message to clipboard
 		if (!setClipboardText(message)) {
 			std::cerr << "Failed to set clipboard text\n";
 			return;
 		}
 
-		// Open appropriate chat (team or all)
-		openChat(cfg);
-		Sleep(75);  // Increased delay to ensure chat opens properly
+		// Open chat (just Enter - command will handle routing)
+		tapKey(cfg.chatKey);
+		Sleep(75);
 
-		// Paste message
+		// Paste and send
 		pasteFromClipboard();
-		Sleep(50);  // Delay before sending
-
-		// Send message (always just Enter for sending)
+		Sleep(50);
 		tapKey(VK_RETURN);
 
-		// Restore clipboard if configured
 		if (cfg.restoreClipboard) {
-			Sleep(25);  // Small delay before restoring
+			Sleep(25);
 			restoreOriginalClipboard(cfg);
 		}
 	}
