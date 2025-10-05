@@ -55,6 +55,7 @@ struct ChatSpammerConfig : FeatureConfig {
 	unsigned int chatKey = 0x0D;  // Enter key (default)
 	std::string messageFile = "messages.txt";
 	std::string messageOrder = "sequential";  // "sequential" or "random"
+	std::string chatTarget = "team";  // "team" or "all"
 	bool restoreClipboard = true;  // Restore original clipboard after use
 };
 

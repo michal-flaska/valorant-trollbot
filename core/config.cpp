@@ -133,6 +133,7 @@ bool loadConfig(const std::string& path, Config& cfg) {
 			else if (key == "chatkey") cfg.chatSpammer.chatKey = hexToUInt(val);
 			else if (key == "messagefile") cfg.chatSpammer.messageFile = val;
 			else if (key == "messageorder") cfg.chatSpammer.messageOrder = val;
+			else if (key == "chattarget") cfg.chatSpammer.chatTarget = toLower(val);
 			else if (key == "restoreclipboard") cfg.chatSpammer.restoreClipboard = val == "1";
 			else if (key == "startdelay") cfg.chatSpammer.startDelay = std::stoul(val);
 			else if (key == "repeatdelay") cfg.chatSpammer.repeatDelay = std::stoul(val);

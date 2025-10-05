@@ -3,6 +3,11 @@
 > [!IMPORTANT]
 > This is a learning project for C++ and Win32 API development. Don't be an idiot and use this in ranked games - it's meant for custom lobbies and messing around with friends. Riot will ban you if you use cheats in competitive matches, so keep it to practice range or custom games only.
 
+## Known Issues
+> [!CAUTION]
+> **Chat Spammer - ALL Chat Not Working**<br />
+> The chat spammer currently only sends messages to team chat, even when `ChatTarget=all` is configured. The SHIFT+ENTER combination for all chat isn't being recognized properly by Valorant. Multiple input methods have been attempted but the issue persists. Contributions welcome!
+
 ## What is this?
 
 A simple Windows app I built to learn more about:
