@@ -7,8 +7,6 @@
 #include "config.h"
 #include "../features/bhop.h"
 #include "../features/inspect-spam.h"
-#include "../features/mouse-glitch.h"
-#include "../features/spinbot.h"
 #include "../features/weapon-cycler.h"
 #include "../features/custom-key-spam.h"
 #include "../features/voice-chat-spam.h"
@@ -34,12 +32,6 @@ void printLoadedFeatures(const Config& cfg) {
 		if (cfg.inspect.enabled)
 			std::cout << "- Inspect spam (" << cfg.inspect.mode << " mode, trigger: 0x" << std::hex << cfg.inspect.triggerKey
 			<< ", inspect: 0x" << cfg.inspect.inspectKey << std::dec << ")\n";
-		if (cfg.mouseGlitch.enabled)
-			std::cout << "- Mouse glitch (" << cfg.mouseGlitch.mode << " mode, trigger: 0x" << std::hex << cfg.mouseGlitch.triggerKey
-			<< std::dec << ")\n";
-		if (cfg.spinbot.enabled)
-			std::cout << "- Spinbot (" << cfg.spinbot.mode << " mode, trigger: 0x" << std::hex << cfg.spinbot.triggerKey
-			<< std::dec << ")\n";
 		if (cfg.weaponCycler.enabled)
 			std::cout << "- Weapon Cycler (" << cfg.weaponCycler.mode << " mode, trigger: 0x" << std::hex << cfg.weaponCycler.triggerKey
 			<< std::dec << ")\n";
@@ -73,22 +65,6 @@ void inspectThread(const InspectConfig& cfg) {
 	FeatureRunner<InspectConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
 		runInspect(cfg, runner);
-		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
-	}
-}
-
-void mouseGlitchThread(const MouseGlitchConfig& cfg) {
-	FeatureRunner<MouseGlitchConfig> runner;
-	while (running.load(std::memory_order_relaxed)) {
-		runMouseGlitch(cfg, runner);
-		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
-	}
-}
-
-void spinbotThread(const SpinbotConfig& cfg) {
-	FeatureRunner<SpinbotConfig> runner;
-	while (running.load(std::memory_order_relaxed)) {
-		runSpinbot(cfg, runner);
 		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
@@ -154,12 +130,6 @@ int main() {
 	}
 	if (cfg.inspect.enabled) {
 		threads.emplace_back(inspectThread, cfg.inspect);
-	}
-	if (cfg.mouseGlitch.enabled) {
-		threads.emplace_back(mouseGlitchThread, cfg.mouseGlitch);
-	}
-	if (cfg.spinbot.enabled) {
-		threads.emplace_back(spinbotThread, cfg.spinbot);
 	}
 	if (cfg.weaponCycler.enabled) {
 		threads.emplace_back(weaponCyclerThread, cfg.weaponCycler);
