@@ -55,6 +55,7 @@ struct DevConfig {
 	unsigned int mainLoopDelay = 50;
 	unsigned int threadLoopDelay = 10;
 	unsigned int exitKey = 0x1B;
+	unsigned int disableAllKey = 0x60; // Numpad 0 by default
 };
 
 struct Config {

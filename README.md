@@ -17,11 +17,11 @@ Originally made for Valorant but also works on CS2 and probably other games too.
 
 - **Bhop** - Auto jump spam while holding a key
 - **Inspect Spam** - Rapidly inspect your weapon
-- **Custom Key Spam** - Spam any key you want (like W for movement)
 - **Voice Chat Spam** - Rapidly toggle voice chat on/off while your beautiful voice is talkin' shit
-- **Interact Spam** - Spam the interact key (useful for spamming defuse/plant)
+- **Interact Spam** - Spam the interact key (useful for spamming defuse/plant or orb collect)
 - **Weapon Cycler** - Automatically cycle through your weapons
-- **Chat Spammer** - Send random messages from your list to team or all chat
+- **Chat Spammer** - Send random/sequential messages from your list to team or all chat
+- **Custom Key Spam** - Spam any key you want - in case you aren't happy with current features
 
 Each feature supports hold/toggle modes, custom keybinds, and timing configuration.
 
@@ -80,4 +80,4 @@ Press ESC to exit.
 - Only tested on Windows 10/11
 - Built this mainly to understand how input simulation works in Windows
 
-Don't blame me if you get banned for being dumb with it.
+Don't blame me if you get banned for being dumb with it. Like I said, it's my personal learning tool.
