@@ -47,64 +47,88 @@ void printLoadedFeatures(const Config& cfg) {
 		if (cfg.chatSpammer.enabled)
 			std::cout << "- Chat Spammer (" << cfg.chatSpammer.mode << " mode, trigger: 0x" << std::hex << cfg.chatSpammer.triggerKey
 			<< ", file: " << cfg.chatSpammer.messageFile << std::dec << ")\n";
-		std::cout << '\n' << "Press ESC to exit" << '\n' << '\n';
+		std::cout << '\n' << "Press ESC to exit" << '\n';
+		std::cout << "Press Numpad 0 to disable all active features" << '\n' << '\n';
 	}
 }
 
 std::atomic<bool> running{ true };
+std::atomic<bool> disableAllRequested{ false };
+
+FeatureRunner<BhopConfig> bhopRunner;
+FeatureRunner<InspectConfig> inspectRunner;
+FeatureRunner<WeaponCyclerConfig> weaponCyclerRunner;
+FeatureRunner<CustomKeySpamConfig> customKeySpamRunner;
+FeatureRunner<VoiceChatSpamConfig> voiceChatSpamRunner;
+FeatureRunner<InteractSpamConfig> interactSpamRunner;
+FeatureRunner<ChatSpammerConfig> chatSpammerRunner;
 
 void bhopThread(const BhopConfig& cfg) {
-	FeatureRunner<BhopConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
-		runBhop(cfg, runner);
+		if (disableAllRequested.load(std::memory_order_relaxed)) {
+			bhopRunner.reset("Bhop");
+		}
+		runBhop(cfg, bhopRunner);
 		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
 void inspectThread(const InspectConfig& cfg) {
-	FeatureRunner<InspectConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
-		runInspect(cfg, runner);
+		if (disableAllRequested.load(std::memory_order_relaxed)) {
+			inspectRunner.reset("Inspect Spam");
+		}
+		runInspect(cfg, inspectRunner);
 		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
 void weaponCyclerThread(const WeaponCyclerConfig& cfg) {
-	FeatureRunner<WeaponCyclerConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
-		runWeaponCycler(cfg, runner);
+		if (disableAllRequested.load(std::memory_order_relaxed)) {
+			weaponCyclerRunner.reset("Weapon Cycler");
+		}
+		runWeaponCycler(cfg, weaponCyclerRunner);
 		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
 void customKeySpamThread(const CustomKeySpamConfig& cfg) {
-	FeatureRunner<CustomKeySpamConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
-		runCustomKeySpam(cfg, runner);
+		if (disableAllRequested.load(std::memory_order_relaxed)) {
+			customKeySpamRunner.reset("Custom Key Spam");
+		}
+		runCustomKeySpam(cfg, customKeySpamRunner);
 		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
 void voiceChatSpamThread(const VoiceChatSpamConfig& cfg) {
-	FeatureRunner<VoiceChatSpamConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
-		runVoiceChatSpam(cfg, runner);
+		if (disableAllRequested.load(std::memory_order_relaxed)) {
+			voiceChatSpamRunner.reset("Voice Chat Spam");
+		}
+		runVoiceChatSpam(cfg, voiceChatSpamRunner);
 		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
 void interactSpamThread(const InteractSpamConfig& cfg) {
-	FeatureRunner<InteractSpamConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
-		runInteractSpam(cfg, runner);
+		if (disableAllRequested.load(std::memory_order_relaxed)) {
+			interactSpamRunner.reset("Interact Spam");
+		}
+		runInteractSpam(cfg, interactSpamRunner);
 		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
 
 void chatSpammerThread(const ChatSpammerConfig& cfg) {
-	FeatureRunner<ChatSpammerConfig> runner;
 	while (running.load(std::memory_order_relaxed)) {
-		runChatSpammer(cfg, runner);
+		if (disableAllRequested.load(std::memory_order_relaxed)) {
+			chatSpammerRunner.reset("Chat Spammer");
+		}
+		runChatSpammer(cfg, chatSpammerRunner);
 		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.threadLoopDelay));
 	}
 }
@@ -147,6 +171,8 @@ int main() {
 		threads.emplace_back(chatSpammerThread, cfg.chatSpammer);
 	}
 
+	bool lastDisableAllPressed = false;
+
 	while (running.load(std::memory_order_relaxed)) {
 		if (GetAsyncKeyState(g_devConfig.exitKey) & 0x8000) {
 			running.store(false, std::memory_order_relaxed);
@@ -155,6 +181,18 @@ int main() {
 			}
 			break;
 		}
+
+		bool disableAllPressed = GetAsyncKeyState(g_devConfig.disableAllKey) & 0x8000;
+		if (disableAllPressed && !lastDisableAllPressed) {
+			disableAllRequested.store(true, std::memory_order_relaxed);
+			if (g_devConfig.showToggleLogs) {
+				std::cout << "Disabling all active features..." << '\n';
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			disableAllRequested.store(false, std::memory_order_relaxed);
+		}
+		lastDisableAllPressed = disableAllPressed;
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(g_devConfig.mainLoopDelay));
 	}
 

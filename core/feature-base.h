@@ -56,4 +56,18 @@ public:
 			hasDelayPassed = false;
 		}
 	}
+
+	void reset(const char* featureName = nullptr) {
+		if (toggle) {
+			toggle = false;
+			hasDelayPassed = false;
+			if (featureName && g_devConfig.showToggleLogs) {
+				std::cout << featureName << " OFF\n";
+			}
+		}
+	}
+
+	bool isActive() const {
+		return toggle;
+	}
 };

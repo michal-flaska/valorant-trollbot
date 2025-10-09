@@ -126,6 +126,7 @@ bool loadConfig(const std::string& path, Config& cfg) {
 			else if (key == "mainloopdelay") cfg.dev.mainLoopDelay = std::stoul(val);
 			else if (key == "threadloopdelay") cfg.dev.threadLoopDelay = std::stoul(val);
 			else if (key == "exitkey") cfg.dev.exitKey = hexToUInt(val);
+			else if (key == "disableallkey") cfg.dev.disableAllKey = hexToUInt(val);
 		}
 	}
 
